@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>
+		
+	</title>
+	<script src="jquery.js"></script>
+	<script src="jquery-ui.js"></script>
+	<script src="blockly_compressed.js"></script>
+	<script src="javascript_compressed.js"></script>
+	<script src="blocks_compressed.js"></script>
+	<script src="ainsBlocks.js"></script>
+	<script src="msg/js/en.js"></script>
+	<link href="jquery-ui.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+	<!-- <style>
+         .ui-widget-header,.ui-state-default, ui-button {
+            background:#b9cd6d;
+            border: 1px solid #b9cd6d;
+            color: #FFFFFF;
+            font-weight: bold;
+         }
+      </style> -->
+</head>
+<body>
+	<div id="test">
+		<input type="button" name="button" value="test jquery">
+	</div>
+	<div id="dialog" title="Basic dialog" style="display:none">
+	  <p>This is the default dialog which is usseful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+	</div>
+
+	<div id="dialogCondition" title="Edit your condition:" style="display:none">
+		<p>Your current condition is: <span id="previousCondition"></span>.</p>
+		<input type="text" name="firstArgument" placeholder="First Argument">
+		<input type="text" name="operator" placeholder="=" style="width:20">
+		<input type="text" name="secondArgument" placeholder="Second Argument">
+
+		<input type="button" class="btn" name="submit" value="add">
+		<input type="button" class="btn" name="submit" value="delete">
+	</div>
+
+	<script type="text/javascript">
+		$(function(){
+			//$("#dialog").dialog();
+			$("#test").click(function(){
+				var $newDialog = $("#dialog").dialog();
+
+			});
+		});
+	</script>
+
+
+
+	<div id="blocklyDiv" style="height: 800px; width: 1200px; float:left;"></div>
+	<div id="textarea"></div>
+
+	<xml id="toolbox" style="display: none">
+	  <!-- <block type="controls_if"></block>
+	  <block type="controls_repeat_ext"></block>
+	  <block type="logic_compare"></block>
+	  <block type="math_number"></block>
+	  <block type="math_arithmetic"></block>
+	  <block type="text"></block>
+	  <block type="text_print"></block> -->
+	  <block type="ains_invoke"></block>
+	  <block type="ains_if"></block>
+	  <block type="ains_while"></block>
+	  <!-- <block type="math_change"></block> -->
+	  <!-- <block type="logic_compare" color="green"></block> -->
+	</xml>
+	<script>
+		window.onload = function() {
+			createAinsBlocks();
+			
+
+
+			var workspace = Blockly.inject('blocklyDiv',
+		      {
+		      	toolbox: document.getElementById('toolbox'),
+				grid:
+			         {spacing: 20,
+			          length: 3,
+			          colour: '#ccc',
+			          snap: true},
+			    trashcan: true,
+			    horizontalLayout: false,
+			    readOnly:false,
+			    scrollbars:true,
+			    //toolboxPosition:"start",
+		      });
+			// function myUpdateFunction(event) {
+			// 	var code = Blockly.JavaScript.workspaceToCode(workspace);
+			// 	document.getElementById('textarea').value = code;
+			// }
+			workspace.addChangeListener(function(event){
+			 	if (event.type == Blockly.Events.MOVE) {
+				 	var xml = Blockly.Xml.workspaceToDom(workspace);
+					var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+					console.log(xml_text);
+			 	}
+			 	
+			 });
+			workspace.addChangeListener(onClicking);
+
+			function onClicking(event) {
+				if (event.type == Blockly.Events.UI && event.element == 'click') {
+					//Using jQuery to create a dialog
+					var blockId = event.blockId;
+					var block = workspace.getBlockById(blockId);
+					var inputList = block.inputList;
+					console.log(block);
+					console.log(inputList);
+
+					if (block.type == 'ains_invoke') {
+						var textData = inputList[0].fieldRow[1].text_;
+						console.log(textData);
+						//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
+					} else if (block.type == 'ains_if') {
+						var ifCondition = inputList[0].fieldRow[1].text_;
+
+						console.log(ifCondition);
+						createDialog(ifCondition);
+
+						// var textInput = 'you clicked me, so condition is changed';
+
+						// //workspace.getBlockById(blockId).getField('condition').setText(textInput);
+						// block.getField('condition').setText(textInput);
+
+
+						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].text_ = textInput;
+						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
+
+					} else if (block.type == 'ains_while') {
+						var whileCondition = inputList[0].fieldRow[1].text_;
+						console.log(whileCondition);
+						createDialog(whileCondition);
+
+						// var textInput = 'you clicked me, so condition is changed';
+						// block.getField('condition').setText(textInput);
+					}
+				}
+				function createDialog(typeCondition) {
+
+					$("#previousCondition").html(typeCondition);
+					var $dialog = $("#dialogCondition").dialog({autoOpen: false,});
+
+					
+					$dialog.dialog("option","modal","true");
+					$dialog.dialog("option","width",780);
+					$dialog.dialog("option","height",400);
+					$dialog.dialog("option","height","auto");
+					$dialog.dialog("option","show",{effect:"blind",duration:200,});
+					$dialog.dialog("option","hide",{effect:"blind",duration:200,});
+					$dialog.dialog({open:function(event, ui){
+						$('.ui-widget-overlay').bind('click',function(){
+							$dialog.dialog('close');
+						});
+					}});
+
+
+
+					$dialog.dialog({ buttons: [ { text: "Ok", click: function() { $( this ).dialog( "close" ); } } ] });
+
+					$dialog.dialog("open");
+
+
+				}
+
+			}
+
+			// workspace.addChangeListener(Blockly.Events.Move, function(){
+			// 	var xml = Blockly.Xml.workspaceToDom(workspace);
+			// 	var xml_text = Blockly.Xml.domToPrettyText(xml);
+
+			// 	console.log(xml_text);
+			// });
+
+			
+			
+		}
+	  
+	</script>
+</body>
+</html>
