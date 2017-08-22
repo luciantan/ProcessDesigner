@@ -8,10 +8,12 @@
 	<script src="jquery-ui.js"></script>
 	<script src="blockly_compressed.js"></script>
 	<script src="javascript_compressed.js"></script>
-	<script src="blocks_compressed.js"></script>
+	<!-- <script src="blocks_compressed.js"></script> -->
 	<script src="ainsBlocks.js"></script>
 	<script src="msg/js/en.js"></script>
+	<script src="jquery.slidereveal.min.js"></script>
 	<link href="jquery-ui.css" rel="stylesheet">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 	<!-- <style>
          .ui-widget-header,.ui-state-default, ui-button {
@@ -21,56 +23,97 @@
             font-weight: bold;
          }
      </style> -->
-
+     <style type="text/css">
+     	.col-sm-10 {
+     		padding:0px;
+     	}
+     	.col-sm-2 {
+     		padding:0px;
+     	}
+     </style>
 
  </head>
  <body>
 
- 	<div id="dialog" title="Basic dialog" style="display:none">
+ 	<!-- <div id="dialog" title="Basic dialog" style="display:none">
  		<p>This is the default dialog which is usseful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
- 	</div>
+ 	</div> -->
 
-<!-- 	<div id="dialogCondition" title="Edit your condition:" style="display:none">
-		<p>Your current condition is: <span id="previousCondition"></span>.</p>
-		<input type="text" name="firstArgument" placeholder="First Argument">
-		<input type="text" name="operator" placeholder="=" style="width:20">
-		<input type="text" name="secondArgument" placeholder="Second Argument">
-
-		<input type="button" class="btn" name="submit" value="add">
-		<input type="button" class="btn" name="submit" value="delete">
-	</div> -->
-
-
+	
+	
 	<div class="row">
-		<div class="col-sm-8" id="blocklyArea">
+		<div class="col-sm-9">
+			<div id="blocklyArea"></div>
 			<div id="blocklyDiv" style="height: 880px; width: 1200px;"></div>
+			<!-- <div id="blocklyDiv" style="position:absolute"></div> -->
 		</div>
-		<div class="col-sm-4">
-			This is 3
-			<div class="container" id="dialogCondition" style="display:none">
+		<div class="col-sm-3">
+			<!-- <div class="container" id="conditionBox" style="display:none"> -->
+			<div class="container" id="conditionBox">
 				<div title="Edit your condition:">
-					<p>Your current condition is: <span id="previousCondition"></span>.</p>
-
-					<form class="form-inline">
-					  <div class="form-group col-sm-6">
-					    <label for="condition">Condition:</label>
-					    <input type="text" class="form-control" id="condition">
-					  </div>
-					  <button type="button" class="btn btn-default">and(or)</button>
-					  <button type="button" class="btn btn-default">delete</button>
-					</form>
+					<table>
+						<tr>
+							<td>
+								<p>Your current condition is: </p>
+							</td>
+							<td>
+								<p id="previousCondition"></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>Your current comment is: </p>
+							</td>
+							<td>
+								<p id="previousComment"></p>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>Enter new condition:</p>
+							</td>
+							<td>
+								<input type="text" name="condition" id="newCondition" placeholder="eg: A > B">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>Enter new comment:</p>
+							</td>
+							<td>
+								<input type="text" name="comment" id="newComment" placeholder="my comment">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" name="button" id="addConditionBtn" value="OK">
+							</td>
+						</tr>
+					</table>
 				</div>
-
-				<button type="button" class="btn btn-default">OK</button>
-
-
+				<div class="container" id="xmlBox">
+					<table>
+						<tr>
+							<td id="xmlDisplay">
+								
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
+			
 		</div>
+
+
 
 
 
 
 		<xml id="toolbox" style="display: none">
+
+			<label text="Procedure Designer" web-class="myLabelStyle"></label>
+			
+			<sep gap="120"></sep>
 	  <!-- <block type="controls_if"></block>
 	  <block type="controls_repeat_ext"></block>
 	  <block type="logic_compare"></block>
@@ -79,7 +122,11 @@
 	  <block type="text"></block>
 	  <block type="text_print"></block> -->
 	  <block type="ains_invoke"></block>
+	  <sep gap="40"></sep>
+
 	  <block type="ains_if"></block>
+	  <sep gap="40"></sep>
+
 	  <block type="ains_while"></block>
 	  <!-- <block type="math_change"></block> -->
 	  <!-- <block type="logic_compare" color="green"></block> -->

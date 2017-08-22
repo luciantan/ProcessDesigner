@@ -1,10 +1,13 @@
 window.onload = function() {
+
+	
+
 	createAinsBlocks();
 
 	var blocklyArea = document.getElementById('blocklyArea');
 	var blocklyDiv = document.getElementById('blocklyDiv');
 
-	var workspace = Blockly.inject(blocklyDiv,
+	var workspace = Blockly.inject('blocklyDiv',
 	{
 		toolbox: document.getElementById('toolbox'),
 		grid:
@@ -37,99 +40,114 @@ window.onload = function() {
 	onresize();
 	Blockly.svgResize(workspace);
 
+	AinsXML = {};
+	AinsXML.xml = null;
+	AinsXML.$xmlDisplay = $('#xmlDisplay');
+
 	workspace.addChangeListener(function(event){
 		if (event.type == Blockly.Events.MOVE) {
 			var xml = Blockly.Xml.workspaceToDom(workspace);
 			var xml_text = Blockly.Xml.domToPrettyText(xml);
+			AinsXML.xml = xml_text;
+			AinsXML.$xmlDisplay.text(AinsXML.xml);
 
 			console.log(xml_text);
 		}
 
 	});
-	workspace.addChangeListener(onClicking);
+	var AinsBlocks = {
+		selectedBlock : null,
+		$conditionBox : $('#conditionBox'),
+		$previousCondition : $('#previousCondition'),
+		// $previousComment : $('#previousComment'),
+		// $addConditionBtn : $('#addConditionBtn'),
+		// $newCondition : $('newCondition'),
+		// $newComment : $('#newComment'),
 
-	function onClicking(event) {
+	};
+	// AinsBlocks.selectedBlock = null;
+	// AinsBlocks.$conditionBox = $('#conditionBox');
+	//AinsBlocks.$previousCondition = $('#previousCondition');
+	var $previousComment = $('#previousComment');
+	var $addConditionBtn = $('#addConditionBtn');
+	var $newCondition = $('#newCondition');
+	var $newComment = $('#newComment');
+
+
+	$addConditionBtn.on('click',$addConditionBtn, function(){
+		addConditionHandler(AinsBlocks.selectedBlock);
+	});
+	function addConditionHandler(block){
+		var conditionField = block.getField('condition'); //For the condition field in the block
+		var newCondition = $newCondition.val();
+		conditionField.setText(newCondition);
+		AinsBlocks.$previousCondition.html(newCondition);		
+
+		var commentField = block.getField('comments'); //For the comment field in the block
+		var newComment = $newComment.val();
+		commentField.setText(newComment);
+		$previousComment.html(newComment);
+	};
+
+
+
+	workspace.addChangeListener(onClickingBlocks);
+
+
+
+	function onClickingBlocks(event) {
+		
+
 		if (event.type == Blockly.Events.UI && event.element == 'click') {
-					//Using jQuery to create a dialog
-					var blockId = event.blockId;
-					var block = workspace.getBlockById(blockId);
-					var inputList = block.inputList;
-					console.log(block);
-					console.log(inputList);
+			//$('#conditionBox').toggle("slide",{direction:"right"}, 500);
+			//Using jQuery to create a dialog
+			var blockId = event.blockId;
+			var block = workspace.getBlockById(blockId);
+			AinsBlocks.selectedBlock = block;
+			var inputList = block.inputList;
 
-					if (block.type == 'ains_invoke') {
-						var textData = inputList[0].fieldRow[1].text_;
-						console.log(textData);
-						//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
-					} else if (block.type == 'ains_if') {
-						var ifCondition = inputList[0].fieldRow[1].text_;
+			if (block.type == 'ains_invoke') {
+				//var textData = block.getField('')
+				AinsBlocks.$conditionBox.hide("slide",{direction:"right"}, 500);
+				var textData = inputList[0].fieldRow[1].text_;
+				console.log(textData);
+				//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
+			} else if (block.type == 'ains_if') {
+				AinsBlocks.$conditionBox.show("slide",{direction:"right"}, 500);
+				$newCondition.val('');
+				$newComment.val('');
 
-						console.log(ifCondition);
-						createDialog(ifCondition);
+				var conditionField = block.getField('condition');
+				var commentField = block.getField('comments');
+				conditionField.maxDisplayLength = 8;
+				commentField.maxDisplayLength = 8;
 
-						// var textInput = 'you clicked me, so condition is changed';
+				var previousCondition = AinsBlocks.selectedBlock.getField('condition').getText();
+				AinsBlocks.$previousCondition.html(previousCondition);
 
-						// //workspace.getBlockById(blockId).getField('condition').setText(textInput);
-						// block.getField('condition').setText(textInput);
+				var previousComment = AinsBlocks.selectedBlock.getField('comments').getText();
+				$previousComment.html(previousComment);
 
+				 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].text_ = textInput;
+				 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
 
-						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].text_ = textInput;
-						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
+			} else if (block.type == 'ains_while') {
+				AinsBlocks.$conditionBox.show("slide",{direction:"right"}, 500);
+				$newCondition.val('');
+				$newComment.val('');
 
-						} else if (block.type == 'ains_while') {
-							var whileCondition = inputList[0].fieldRow[1].text_;
-							console.log(whileCondition);
-							createDialog(whileCondition);
+				var conditionField = block.getField('condition');
+				var commentField = block.getField('comments');
+				conditionField.maxDisplayLength = 8;
+				commentField.maxDisplayLength = 8;
 
-						// var textInput = 'you clicked me, so condition is changed';
-						// block.getField('condition').setText(textInput);
-					}
-				}
+				var previousCondition = AinsBlocks.selectedBlock.getField('condition').getText();
+				AinsBlocks.$previousCondition.html(previousCondition);
 
-				function createDialog(typeCondition) {
-					$("#previousCondition").html(typeCondition);
-					var $dialog = $("#dialogCondition").toggle("slide", {direction:"right"});
-
-
-					
-
-				}
-				// function createDialog(typeCondition) {
-
-				// 	$("#previousCondition").html(typeCondition);
-				// 	var $dialog = $("#dialogCondition").dialog({autoOpen: false,});
-
-
-				// 	$dialog.dialog("option","modal","true");
-				// 	$dialog.dialog("option","width",780);
-				// 	$dialog.dialog("option","height",400);
-				// 	$dialog.dialog("option","height","auto");
-				// 	$dialog.dialog("option","show",{effect:"blind",duration:200,});
-				// 	$dialog.dialog("option","hide",{effect:"blind",duration:200,});
-				// 	$dialog.dialog({open:function(event, ui){
-				// 		$('.ui-widget-overlay').bind('click',function(){
-				// 			$dialog.dialog('close');
-				// 		});
-				// 	}});
-
-
-
-				// 	$dialog.dialog({ buttons: [ { text: "Ok", click: function() { $( this ).dialog( "close" ); } } ] });
-
-				// 	$dialog.dialog("open");
-
-
-				// }
-
+				var previousComment =  AinsBlocks.selectedBlock.getField('comments').getText();
+				$previousComment.html(previousComment);
 			}
-
-			// workspace.addChangeListener(Blockly.Events.Move, function(){
-			// 	var xml = Blockly.Xml.workspaceToDom(workspace);
-			// 	var xml_text = Blockly.Xml.domToPrettyText(xml);
-
-			// 	console.log(xml_text);
-			// });
-
-			
-			
 		}
+	}
+			
+}

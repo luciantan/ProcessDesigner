@@ -1,28 +1,32 @@
 function createAinsBlocks(){
 	var ainsIfJson = {
-							  "type": "ains_if",
-							  "message0": "If:  %1 %2 Then: %3",
-							  "args0": [
-							    {
-							      "type": "field_input",
-							      "name": "condition",
-							      "text": "condition"
-							    },
-							    {
-							      "type": "input_dummy"
-							    },
-							    {
-							      "type": "input_statement",
-							      "name": "then"
-							    }
-							  ],
-							  "previousStatement": null,
-							  "nextStatement": null,
-							  "colour": 255,
-							  "tooltip": "",
-							  "helpUrl": ""
-							};
-
+					  "type": "ains_if",
+					  "message0": "If:  %1 |         // %2 %3 Then: %4",
+					  "args0": [
+					    {
+					      "type": "field_input",
+					      "name": "condition",
+					      "text": "condition"
+					    },
+					    {
+					      "type": "field_input",
+					      "name": "comments",
+					      "text": "comments"
+					    },
+					    {
+					      "type": "input_dummy"
+					    },
+					    {
+					      "type": "input_statement",
+					      "name": "then"
+					    }
+					  ],
+					  "previousStatement": null,
+					  "nextStatement": null,
+					  "colour": 255,
+					  "tooltip": "",
+					  "helpUrl": ""
+					};
 			Blockly.Blocks['ains_if'] = {
 			  init: function() {
 			    this.jsonInit(ainsIfJson);
@@ -32,6 +36,7 @@ function createAinsBlocks(){
 			      return 'Add a number to variable "%1".'.replace('%1',
 			          thisBlock.getFieldValue('VAR'));
 			    });
+			    this.setEditable(false);
 			    this.data = 'AinsIf';
 			  }
 			};
@@ -83,12 +88,17 @@ function createAinsBlocks(){
 
 			var ainsWhileJson = {
 								  "type": "ains_while",
-								  "message0": "while %1 %2 do %3",
+								  "message0": "while %1 |      // %2 %3 do %4",
 								  "args0": [
 								    {
 								      "type": "field_input",
 								      "name": "condition",
 								      "text": "condition"
+								    },
+								    {
+								      "type": "field_input",
+								      "name": "comments",
+								      "text": "comments"
 								    },
 								    {
 								      "type": "input_dummy"
@@ -116,6 +126,7 @@ function createAinsBlocks(){
 			          thisBlock.getFieldValue('VAR'));
 			    });
 			    this.data = 'AinsWhile';
+			    this.setEditable(false);
 			  }
 			};
 
