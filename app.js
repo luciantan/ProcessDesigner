@@ -55,19 +55,22 @@ window.onload = function() {
 		}
 
 	});
+
+
 	var AinsBlocks = {
 		selectedBlock : null,
-		$conditionBox : $('#conditionBox'),
-		$previousCondition : $('#previousCondition'),
+		//$conditionBox : $('#conditionBox'),
+		//$previousCondition : $('#previousCondition'),
 		// $previousComment : $('#previousComment'),
 		// $addConditionBtn : $('#addConditionBtn'),
 		// $newCondition : $('newCondition'),
 		// $newComment : $('#newComment'),
-
 	};
-	// AinsBlocks.selectedBlock = null;
-	// AinsBlocks.$conditionBox = $('#conditionBox');
-	//AinsBlocks.$previousCondition = $('#previousCondition');
+
+
+	//AinsBlocks.selectedBlock = null;
+	var $conditionBox = $('#conditionBox');
+	var $previousCondition = $('#previousCondition');
 	var $previousComment = $('#previousComment');
 	var $addConditionBtn = $('#addConditionBtn');
 	var $newCondition = $('#newCondition');
@@ -81,12 +84,21 @@ window.onload = function() {
 		var conditionField = block.getField('condition'); //For the condition field in the block
 		var newCondition = $newCondition.val();
 		conditionField.setText(newCondition);
-		AinsBlocks.$previousCondition.html(newCondition);		
+		$previousCondition.html(newCondition);		
 
 		var commentField = block.getField('comments'); //For the comment field in the block
 		var newComment = $newComment.val();
-		commentField.setText(newComment);
+		commentField.setText('//'+newComment);
+
+		//commentField.getSvgRoot().setAttribute('style','fill: #3fdc54;');
+
 		$previousComment.html(newComment);
+		block.data = newComment;
+
+		var xml = Blockly.Xml.workspaceToDom(workspace);
+		var xml_text = Blockly.Xml.domToPrettyText(xml);
+		AinsXML.xml = xml_text;
+		AinsXML.$xmlDisplay.text(AinsXML.xml);
 	};
 
 
@@ -108,45 +120,47 @@ window.onload = function() {
 
 			if (block.type == 'ains_invoke') {
 				//var textData = block.getField('')
-				AinsBlocks.$conditionBox.hide("slide",{direction:"right"}, 500);
+				$conditionBox.hide("slide",{direction:"right"}, 500);
 				var textData = inputList[0].fieldRow[1].text_;
 				console.log(textData);
 				//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
 			} else if (block.type == 'ains_if') {
-				AinsBlocks.$conditionBox.show("slide",{direction:"right"}, 500);
+				$conditionBox.show("slide",{direction:"right"}, 500);
 				$newCondition.val('');
 				$newComment.val('');
 
 				var conditionField = block.getField('condition');
 				var commentField = block.getField('comments');
 				conditionField.maxDisplayLength = 8;
-				commentField.maxDisplayLength = 8;
+				commentField.maxDisplayLength = 20;
 
 				var previousCondition = AinsBlocks.selectedBlock.getField('condition').getText();
-				AinsBlocks.$previousCondition.html(previousCondition);
+				$previousCondition.html(previousCondition);
 
-				var previousComment = AinsBlocks.selectedBlock.getField('comments').getText();
+				var previousComment = AinsBlocks.selectedBlock.getField('comments').getText().slice(2);
 				$previousComment.html(previousComment);
 
+				
 				 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].text_ = textInput;
 				 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
 
 			} else if (block.type == 'ains_while') {
-				AinsBlocks.$conditionBox.show("slide",{direction:"right"}, 500);
+				$conditionBox.show("slide",{direction:"right"}, 500);
 				$newCondition.val('');
 				$newComment.val('');
 
 				var conditionField = block.getField('condition');
 				var commentField = block.getField('comments');
 				conditionField.maxDisplayLength = 8;
-				commentField.maxDisplayLength = 8;
+				commentField.maxDisplayLength = 20;
 
 				var previousCondition = AinsBlocks.selectedBlock.getField('condition').getText();
-				AinsBlocks.$previousCondition.html(previousCondition);
+				$previousCondition.html(previousCondition);
 
-				var previousComment =  AinsBlocks.selectedBlock.getField('comments').getText();
+				var previousComment =  AinsBlocks.selectedBlock.getField('comments').getText().slice(2);
 				$previousComment.html(previousComment);
 			}
+
 		}
 	}
 			
