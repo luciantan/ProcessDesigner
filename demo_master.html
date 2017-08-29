@@ -49,60 +49,89 @@
 			<!-- <div id="blocklyDiv" style="position:absolute"></div> -->
 		</div>
 		<div class="col-sm-3">
-			<!-- <div class="container" id="conditionBox" style="display:none"> -->
-			<div class="container" id="conditionBox" style="display: none">
-				<div title="Edit your condition:">
-					<table>
-						<tr>
-							<td>
-								<p>Your current condition is: </p>
-							</td>
-							<td>
-								<p id="previousCondition"></p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>Your current comment is: </p>
-							</td>
-							<td>
-								<p id="previousComment"></p>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>Enter new condition:</p>
-							</td>
-							<td>
-								<input type="text" name="condition" id="newCondition" placeholder="eg: A > B">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p>Enter new comment:</p>
-							</td>
-							<td>
-								<input type="text" name="comment" id="newComment" placeholder="my comment">
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<input type="button" name="button" id="addConditionBtn" value="OK">
-							</td>
-						</tr>
-					</table>
+			<div class="container" style="height:400px;">
+				<div class="container" id="conditionBox" style="height: 400px;display: none;">
+					<div title="Edit your condition:">
+						<table>
+							<tr>
+								<td>
+									<p>Your current condition is: </p>
+								</td>
+								<td>
+									<p id="previousCondition"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Your current comment is: </p>
+								</td>
+								<td>
+									<p id="previousComment"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Enter new condition:</p>
+								</td>
+								<td>
+									<input type="text" name="condition" id="newCondition" placeholder="eg: A > B">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Enter new comment:</p>
+								</td>
+								<td>
+									<input type="text" name="comment" id="newComment" placeholder="my comment">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="button" name="button" id="addConditionBtn" value="OK">
+								</td>
+							</tr>
+						</table>
+					</div>
+					
 				</div>
-				<div class="container" id="xmlBox">
+				<!-- <div class="container" id="invokeBox" style="display: none;"> -->
+				<div class="container" id="invokeBox" style="height: 400px;display: none;">
 					<table>
 						<tr>
-							<td id="xmlDisplay">
+							<td>
+								<p>Select from these options:</p>
+							</td>
+							<td id="invokeOptions">
+								<p>Option1</p> 
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>Current option:</p>
+							</td>
+							<td id="currentOption">
 								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" name="button" id="changeOptionBtn" value="OK">
 							</td>
 						</tr>
 					</table>
 				</div>
 			</div>
+			<!-- <div class="container" id="conditionBox" style="display:none"> -->
 			
+			<div class="container" id="xmlBox">
+				<table>
+					<tr>
+						<td id="xmlDisplay">
+							
+						</td>
+					</tr>
+				</table>
+			</div>
 		</div>
 
 

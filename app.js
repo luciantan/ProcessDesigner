@@ -1,6 +1,6 @@
 window.onload = function() {
 
-	
+
 
 	createAinsBlocks();
 
@@ -43,6 +43,7 @@ window.onload = function() {
 	AinsXML = {};
 	AinsXML.xml = null;
 	AinsXML.$xmlDisplay = $('#xmlDisplay');
+	
 
 	workspace.addChangeListener(function(event){
 		if (event.type == Blockly.Events.MOVE) {
@@ -69,6 +70,8 @@ window.onload = function() {
 
 
 	//AinsBlocks.selectedBlock = null;
+	var $invokeBox = $('#invokeBox');
+	var $currentOption = $('#currentOption');
 	var $conditionBox = $('#conditionBox');
 	var $previousCondition = $('#previousCondition');
 	var $previousComment = $('#previousComment');
@@ -104,9 +107,20 @@ window.onload = function() {
 
 
 	workspace.addChangeListener(onClickingBlocks);
+	workspace.addChangeListener(onChangingOptions);
 
 
+	function onChangingOptions(event){
+		if (event.type == Blockly.Events.CHANGE && event.name == 'options') {
+			var blockId = event.blockId;
+			var block = workspace.getBlockById(blockId);
+			AinsBlocks.selectedBlock = block;
+			var field = block.getField('options');
+			var value = field.getText();
 
+			$currentOption.html(value);
+		}
+	};
 	function onClickingBlocks(event) {
 		
 
@@ -119,13 +133,19 @@ window.onload = function() {
 			var inputList = block.inputList;
 
 			if (block.type == 'ains_invoke') {
-				//var textData = block.getField('')
-				$conditionBox.hide("slide",{direction:"right"}, 500);
-				var textData = inputList[0].fieldRow[1].text_;
-				console.log(textData);
+				$conditionBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+					$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+				},});
+				var field = block.getField('options');
+				var value = field.getText();
+				//var textData = inputList[0].fieldRow[1].text_;
+				$currentOption.html(value);
+				
 				//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
 			} else if (block.type == 'ains_if') {
-				$conditionBox.show("slide",{direction:"right"}, 500);
+				$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+					$conditionBox.show({duration:250, effect:'slide', direction:'right'});
+				},});
 				$newCondition.val('');
 				$newComment.val('');
 
@@ -145,7 +165,9 @@ window.onload = function() {
 				 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
 
 			} else if (block.type == 'ains_while') {
-				$conditionBox.show("slide",{direction:"right"}, 500);
+				$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+					$conditionBox.show({duration:250, effect:'slide', direction:'right'});
+				},});
 				$newCondition.val('');
 				$newComment.val('');
 
