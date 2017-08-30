@@ -21,10 +21,23 @@ function createAinsBlocks(){
       };
 
 		Blockly.Blocks['ains_invoke'] = {
+
 		  init: function() {
+			function dynamicOptions() {
+				var options = [];
+				var now = Date.now();
+				for (var i = 0; i < 7; i++) {
+					options.push([String(new Date(now)).substring(0,3), 'DAY' + i]);
+					now += 24 * 60 * 60 * 1000;
+				}
+				return options;
+			}
+			var dropdown = new Blockly.FieldDropdown(dynamicOptions);
+			//input.appendField(dropdown, 'DATE');
+
 		    this.appendDummyInput()
-		        .appendField("Invoke:")
-		        .appendField(new Blockly.FieldDropdown([["option1","option1"], ["option2","option2"], ["option3","option3"]]), "options");
+		        .appendField("Invoke:").appendField(dropdown,'options');
+		        //.appendField(new Blockly.FieldDropdown([["option1","option1"], ["option2","option2"], ["option3","option3"]]), "options");
 		    this.setInputsInline(false);
 		    this.setPreviousStatement(true, null);
 		    this.setNextStatement(true, null);

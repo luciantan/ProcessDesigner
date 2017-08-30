@@ -72,6 +72,8 @@ window.onload = function() {
 	//AinsBlocks.selectedBlock = null;
 	var $invokeBox = $('#invokeBox');
 	var $currentOption = $('#currentOption');
+	var $optionsList = $('#options');
+	var $optionBtn = $('#changeOptionBtn');
 	var $conditionBox = $('#conditionBox');
 	var $previousCondition = $('#previousCondition');
 	var $previousComment = $('#previousComment');
@@ -79,6 +81,12 @@ window.onload = function() {
 	var $newCondition = $('#newCondition');
 	var $newComment = $('#newComment');
 
+	$optionBtn.on('click', $addConditionBtn, function(){
+		var block = AinsBlocks.selectedBlock;
+		var field = block.getField('options');
+		var selectedOption = $optionsList.val();
+		field.setValue(selectedOption);
+	});
 
 	$addConditionBtn.on('click',$addConditionBtn, function(){
 		addConditionHandler(AinsBlocks.selectedBlock);
@@ -138,8 +146,21 @@ window.onload = function() {
 				},});
 				var field = block.getField('options');
 				var value = field.getText();
+				var options = field.getOptions();
+				$optionsList.empty();
+				for (var i = 0; i < options.length; i++) {
+					var option = options[i];
+					$optionsList.append($('<option>', {
+						value: option[1],
+						text: option[0],
+					}));
+				}
+				console.log($optionsList.html());
+				console.log(options);
+
 				//var textData = inputList[0].fieldRow[1].text_;
 				$currentOption.html(value);
+				//console.log(field.getOptions());
 				
 				//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
 			} else if (block.type == 'ains_if') {
