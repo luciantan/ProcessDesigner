@@ -20,7 +20,7 @@ function createAinsBlocks(){
         }
       };
 
-		Blockly.Blocks['ains_invoke'] = {
+		Blockly.Blocks['ains_do'] = {
 
 		  init: function() {
 			function dynamicOptions() {
@@ -38,7 +38,7 @@ function createAinsBlocks(){
 			//input.appendField(dropdown, 'DATE');
 
 		    this.appendDummyInput()
-		        .appendField("Invoke:").appendField(dropdown,'options');
+		        .appendField("Do:").appendField(dropdown,'options');
 		        //.appendField(new Blockly.FieldDropdown([["option1","option1"], ["option2","option2"], ["option3","option3"]]), "options");
 		    this.setInputsInline(false);
 		    this.setPreviousStatement(true, null);
@@ -46,6 +46,7 @@ function createAinsBlocks(){
 		 this.setTooltip("");
 		 this.setHelpUrl("");
 		 this.setColour('#ec9c13');
+		 this.data = 'ainsDo';
 		  }
 		};
 
