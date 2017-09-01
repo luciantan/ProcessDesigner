@@ -43,12 +43,12 @@
 	
 	
 	<div class="row">
-		<div class="col-sm-9">
+		<div class="col-sm-8">
 			<div id="blocklyArea"></div>
 			<div id="blocklyDiv" style="height: 880px; width: 1200px;"></div>
 			<!-- <div id="blocklyDiv" style="position:absolute"></div> -->
 		</div>
-		<div class="col-sm-3">
+		<div class="col-sm-4">
 			<div class="container" style="height:400px;">
 				<div class="container" id="conditionBox" style="height: 400px;display: none;">
 					<div title="Edit your condition:">
@@ -99,7 +99,7 @@
 					<table>
 						<tr>
 							<td>
-								<p>Select from these options:</p>
+								<p>Select function:</p>
 							</td>
 							<td id="invokeOptions">
 								<select name="options" id="options">
@@ -121,6 +121,59 @@
 							</td>
 						</tr>
 					</table>
+				</div>
+				<div class="container" id="getFolderBox" style="height:400px; display:none;">
+					<table>
+						<tr>
+							<th>input:</th>
+						</tr>
+						<tr>
+							<td>
+								Folder ID:
+							</td>
+							<td>
+								<input type="text" name="folderId" id="folderId" placeholder="a123422">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Variable Name:
+							</td>
+							<td>
+								<input type="text" name="variableName" id="variableName" placeholder="x">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" name="button" id="getFolderBtn" value="OK">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="container" id="setValueBox" style="height:400px; display:none;">
+					<table>
+						<tr>
+							<th>
+								choose a variable:
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<select name="options" id="selectVariables"></select>
+							</td>
+						</tr>
+						<tr >
+							<th id="properties">Properties:</th>
+						</tr>
+						<tr>
+						</tr>
+						<tr></tr>
+						<tr>
+							<td>
+								<input type="button" name="setValueBtn" id="setValueBtn" value="OK">
+							</td>
+						</tr>
+					</table>		
 				</div>
 			</div>
 			<!-- <div class="container" id="conditionBox" style="display:none"> -->

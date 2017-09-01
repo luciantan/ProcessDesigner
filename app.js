@@ -47,12 +47,16 @@ window.onload = function() {
 
 	workspace.addChangeListener(function(event){
 		if (event.type == Blockly.Events.MOVE) {
-			var xml = Blockly.Xml.workspaceToDom(workspace);
-			var xml_text = Blockly.Xml.domToPrettyText(xml);
-			AinsXML.xml = xml_text;
-			AinsXML.$xmlDisplay.text(AinsXML.xml);
+			var xmlDom = Blockly.Xml.workspaceToDom(workspace);
+			var xmlText = Blockly.Xml.domToText(xmlDom);
+			var xmlPrettyText = Blockly.Xml.domToPrettyText(xmlDom);
 
-			console.log(xml_text);
+			//var removeNext = Blockly.Xml.deleteNext(xmlText);
+			//console.log(removeNext);
+			AinsXML.xml = xmlPrettyText;
+			AinsXML.$xmlDisplay.text(AinsXML.xml);
+			console.log(xmlDom);
+			console.log(xmlPrettyText);
 		}
 
 	});
@@ -67,6 +71,9 @@ window.onload = function() {
 		// $newCondition : $('newCondition'),
 		// $newComment : $('#newComment'),
 	};
+	var AinsVariables = {
+
+	};
 
 
 	//AinsBlocks.selectedBlock = null;
@@ -74,6 +81,17 @@ window.onload = function() {
 	var $currentOption = $('#currentOption');
 	var $optionsList = $('#options');
 	var $optionBtn = $('#changeOptionBtn');
+
+	var $getFolderBox = $('#getFolderBox');
+	var $folderId = $('#folderId');
+	var $variable = $('#variableName');
+	var $getFolderBtn = $('#getFolderBtn');
+
+	var $setValueBox = $('#setValueBox');
+	var $selectVariables = $('#selectVariables');
+	var $setValueBtn = $('#setValueBtn');
+	var $properties = $('#properties');
+
 	var $conditionBox = $('#conditionBox');
 	var $previousCondition = $('#previousCondition');
 	var $previousComment = $('#previousComment');
@@ -81,11 +99,63 @@ window.onload = function() {
 	var $newCondition = $('#newCondition');
 	var $newComment = $('#newComment');
 
-	$optionBtn.on('click', $addConditionBtn, function(){
+	$optionBtn.on('click', $optionBtn, function(){
 		var block = AinsBlocks.selectedBlock;
 		var field = block.getField('options');
 		var selectedOption = $optionsList.val();
 		field.setValue(selectedOption);
+		if (selectedOption == 'getFolder()') {
+			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$getFolderBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		} else if (selectedOption == 'setValue()') {
+			//update the variables dropdown selector
+			$selectVariables.empty();
+			$.each(AinsVariables, function(key, value){
+				$selectVariables.append($('<option>',{text:key}));
+			});
+			var variable = $selectVariables.val();
+			updateProperties_(variable);
+			// $properties.closest("tr").next().remove();
+			// $properties.closest("tr").next().remove();
+			// $.each(AinsVariables[variable],function(key,value){
+			// 	$properties.closest("tr").after($('<tr>').append($('<td>',{text:key})).append($('<td>').append($('<input>',{type:'text',value:value}))));
+			// });
+
+			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$setValueBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		}
+	});
+	function updateProperties_(variable){
+		$properties.closest("tr").next().remove();
+		$properties.closest("tr").next().remove();
+		$.each(AinsVariables[variable],function(key,value){
+			$properties.closest("tr").after($('<tr>').append($('<td>',{text:key})).append($('<td>').append($('<input>',{type:'text',value:value}))));
+		});
+	};
+
+	$getFolderBtn.on('click', $getFolderBtn,function(){
+		var folderId = $folderId.val();
+		var variable = $variable.val();
+		AinsVariables[variable] = {'folderId':folderId,'type':'folder'};
+
+		console.log(AinsVariables);
+		$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+			$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+		},});
+	});
+
+	$setValueBtn.on('click', $setValueBtn, function(){
+
+		$setValueBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+			$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+		},});
+	});
+
+	$selectVariables.on('change', $selectVariables, function(){
+		var variable = $selectVariables.val();
+		updateProperties_(variable);
 	});
 
 	$addConditionBtn.on('click',$addConditionBtn, function(){

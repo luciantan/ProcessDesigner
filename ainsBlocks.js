@@ -25,11 +25,13 @@ function createAinsBlocks(){
 		  init: function() {
 			function dynamicOptions() {
 				var options = [];
-				var now = Date.now();
-				for (var i = 0; i < 7; i++) {
-					options.push([String(new Date(now)).substring(0,3), 'DAY' + i]);
-					now += 24 * 60 * 60 * 1000;
-				}
+				options.push(['getFolder()','getFolder()']);
+				options.push(['setValue()','setValue()']);
+				// var now = Date.now();
+				// for (var i = 0; i < 7; i++) {
+				// 	options.push([String(new Date(now)).substring(0,3), 'DAY' + i]);
+				// 	now += 24 * 60 * 60 * 1000;
+				// }
 				return options;
 			}
 			var dropdown = new Blockly.FieldDropdown(dynamicOptions);
