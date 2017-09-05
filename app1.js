@@ -37,13 +37,14 @@ window.onload = function(){
 		onresize();
 		Blockly.svgResize(workspace);
 
-		var selectedBlock_ = null;
+		var selectedBlock_ = workspace.newBlock();
 
 
 		return {
 			workspace: workspace,
 			getSelectedBlock : function(){return selectedBlock_},
 			setSelectedBlock: function(block){selectedBlock_ = block},
+			//selectedBlock_: selectedBlock_,
 		};
 
 	})();
@@ -137,6 +138,7 @@ window.onload = function(){
 		var $optionBtn = $('#changeOptionBtn');
 		var $conditionBox = $('#conditionBox');
 		var $getFolderBox = $('#getFolderBox');
+		var $setValueBox = $('#setValueBox');
 
 		workspace.addChangeListener(clickingDoBlockHandler);
 		function clickingDoBlockHandler(event){
@@ -174,18 +176,96 @@ window.onload = function(){
 			field.setValue(selectedOption);
 			$currentOption.html(selectedOption);
 			if (selectedOption == 'getFolder()'){
-				getFolderHandler();
+				openGetFolderBox();
+			} else if (selectedOption == 'setValue()') {
+				openSetValueBox();
 			};
 		});
 
-		function getFolderHandler(){
+		function openGetFolderBox(){
 			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$getFolderBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
-			
 		};
 
+		function openSetValueBox(){
+			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$setValueBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		}
+
 	})();
+
+	var getFolderMethod = (function(){
+		var $getFolderBox = $('#getFolderBox');
+		var $folderId = $('#folderId');
+		var $variable = $('#variableName');
+		var $getFolderBtn = $('#getFolderBtn');
+		var $invokeBox = $('#invokeBox');
+
+		$getFolderBtn.on('click',$getFolderBox, getFolder);
+		function getFolder(){
+			var folderId = $folderId.val();
+			var variable = $variable.val();
+			var block = AinsBlockly.getSelectedBlock();
+			block.data = 'folderName: ' + variable + ' folderId:' + folderId + ' type: folder';
+			AinsBlockly.setSelectedBlock(block);
+			$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		};
+	})();
+
+	var setValueMethod = (function(){
+		var workspace = AinsBlockly.workspace;
+		var $setValueBox = $('#setValueBox');
+		var $selectVariables = $('#selectVariables');
+		var $setValueBtn = $('#setValueBtn');
+		var $properties = $('#properties');
+		var ainsVairiables = [];
+		// var block = AinsBlockly.getSelectedBlock();
+		// var selectedBlockId = block.id;
+		// var rootBlockId = block.getRootBlock().id;
+		// var rootBlock = workspace.getBlockById(rootBlockId);
+		// var currentBlockId = AinsBlockly.getSelectedBlock().getRootBlock().id;
+		// var currentBlock = AinsBlockly.getSelectedBlock().getRootBlock();
+		// block = AinsBlockly.workspace.getBlockById(currentBlockId);
+		// var rootBlock = block.getRootBlock();
+		// while (currentBlock.id != block.id) {
+		// 	ainsVairiables.push(currentBlock.data);
+		// }
+
+		$setValueBtn.on('click', $setValueBtn, setValueBtnHandler);
+
+		function setValueBtnHandler() {
+			var block = AinsBlockly.getSelectedBlock();
+			var rootBlock = block.getRootBlock();
+			var currentBlock = rootBlock;
+
+			while (currentBlock.id != block.id) {
+				ainsVairiables.push(currentBlock.data);
+				currentBlock = currentBlock.getNextBlock();
+			}
+			//console.log(selectedBlockId);
+			// console.log(AinsBlockly.getSelectedBlock().getRootBlock().data);
+			//console.log(rootBlock);
+			console.log(block.data);
+			console.log(ainsVairiables);
+			
+			// console.log(AinsBlockly.getSelectedBlock().getRootBlock().getField('options'));
+		
+		}
+
+
+		return {
+			updateVariableOptions: function() {
+				$selectVariables.empty();
+
+				$.each()
+			}
+		}
+	})();
+
 
 
 
