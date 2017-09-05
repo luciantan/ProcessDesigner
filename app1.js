@@ -148,6 +148,9 @@ window.onload = function(){
 				AinsBlockly.setSelectedBlock(block);
 				if (block.type == 'ains_do'){
 					$conditionBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+						$getFolderBox.hide({duration:250,effect:'slide', direction:'right'});
+						$setValueBox.hide({duration:250,effect:'slide', direction:'right'});
+
 						$invokeBox.show({duration:250, effect:'slide', direction:'right'});
 					},});
 					var field = block.getField('options');
@@ -163,6 +166,8 @@ window.onload = function(){
 					}
 					console.log($optionsList.html());
 					console.log(options);
+					$optionsList.val(value);
+
 	
 					$currentOption.html(value);
 				}
@@ -189,6 +194,9 @@ window.onload = function(){
 		};
 
 		function openSetValueBox(){
+			//update the variables dropdown options
+			setValueMethod.updateVariableOptions();
+
 			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$setValueBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
@@ -202,13 +210,14 @@ window.onload = function(){
 		var $variable = $('#variableName');
 		var $getFolderBtn = $('#getFolderBtn');
 		var $invokeBox = $('#invokeBox');
+		// var ainsVariables = {};
 
 		$getFolderBtn.on('click',$getFolderBox, getFolder);
 		function getFolder(){
 			var folderId = $folderId.val();
 			var variable = $variable.val();
 			var block = AinsBlockly.getSelectedBlock();
-			block.data = 'folderName: ' + variable + ' folderId:' + folderId + ' type: folder';
+			block.data = 'folderName: ' + variable + ' folderId: ' + folderId + ' type: folder';
 			AinsBlockly.setSelectedBlock(block);
 			$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
@@ -222,46 +231,65 @@ window.onload = function(){
 		var $selectVariables = $('#selectVariables');
 		var $setValueBtn = $('#setValueBtn');
 		var $properties = $('#properties');
-		var ainsVairiables = [];
-		// var block = AinsBlockly.getSelectedBlock();
-		// var selectedBlockId = block.id;
-		// var rootBlockId = block.getRootBlock().id;
-		// var rootBlock = workspace.getBlockById(rootBlockId);
-		// var currentBlockId = AinsBlockly.getSelectedBlock().getRootBlock().id;
-		// var currentBlock = AinsBlockly.getSelectedBlock().getRootBlock();
-		// block = AinsBlockly.workspace.getBlockById(currentBlockId);
-		// var rootBlock = block.getRootBlock();
-		// while (currentBlock.id != block.id) {
-		// 	ainsVairiables.push(currentBlock.data);
-		// }
+		var $invokeBox = $('#invokeBox');
+		var ainsVariables = {};
 
 		$setValueBtn.on('click', $setValueBtn, setValueBtnHandler);
 
 		function setValueBtnHandler() {
-			var block = AinsBlockly.getSelectedBlock();
-			var rootBlock = block.getRootBlock();
-			var currentBlock = rootBlock;
+			// var block = AinsBlockly.getSelectedBlock();
+			// var rootBlock = block.getRootBlock();
+			// var currentBlock = rootBlock;
 
-			while (currentBlock.id != block.id) {
-				ainsVairiables.push(currentBlock.data);
-				currentBlock = currentBlock.getNextBlock();
-			}
+			// while (currentBlock.id != block.id) {
+			// 	ainsVariables.append(currentBlock.data);
+			// 	currentBlock = currentBlock.getNextBlock();
+			// }
 			//console.log(selectedBlockId);
 			// console.log(AinsBlockly.getSelectedBlock().getRootBlock().data);
 			//console.log(rootBlock);
-			console.log(block.data);
-			console.log(ainsVairiables);
-			
-			// console.log(AinsBlockly.getSelectedBlock().getRootBlock().getField('options'));
+			//console.log(block.data);
+			console.log(ainsVariables);
+			$setValueBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
 		
 		}
 
+		function updateProperties_(variable){
+			$properties.closest("tr").next().remove();
+			$properties.closest("tr").next().remove();
+			$.each(ainsVariables[variable],function(key,value){
+				$properties.closest("tr").after($('<tr>').append($('<td>',{text:key})).append($('<td>').append($('<input>',{type:'text',value:value}))));
+			});
+		}
 
 		return {
 			updateVariableOptions: function() {
-				$selectVariables.empty();
 
-				$.each()
+				//update the available variables 
+				ainsVariables = {};
+				var block = AinsBlockly.getSelectedBlock();
+				var rootBlock = block.getRootBlock();
+				var currentBlock = rootBlock;
+				var variable = '';
+				while (currentBlock.id != block.id) {
+					if (currentBlock.getField('options').getText() != 'getFolder()') {
+						currentBlock = currentBlock.getNextBlock();
+					}
+					var data = currentBlock.data;
+					var variableArray = data.split(' ');
+					variable = variableArray[1];
+					ainsVariables[variable] = {'folderId' : variableArray[3], 'type' : variableArray[5]};
+					currentBlock = currentBlock.getNextBlock();
+				}
+				//update the options dropdown selector
+				$selectVariables.empty();
+				$.each(ainsVariables, function(key, value){
+					$selectVariables.append($('<option>',{text:key}));
+				});
+				var variable = $selectVariables.val();
+				updateProperties_(variable);
 			}
 		}
 	})();
