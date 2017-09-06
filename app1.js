@@ -213,7 +213,10 @@ window.onload = function(){
 			var folderId = $folderId.val();
 			var variable = $variable.val();
 			var block = AinsBlockly.getSelectedBlock();
-			block.data = 'folderName: ' + variable + ' folderId: ' + folderId + ' type: folder';
+			var oData = {"folderName":variable,"folderId":folderId,"type":"folder"};
+			block.data = JSON.stringify(oData);
+			console.log(block.data);
+			//block.data = '{folderName: ' + variable + ' folderId: ' + folderId + ' type: folder}';
 			AinsBlockly.setSelectedBlock(block);
 			$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
@@ -252,8 +255,10 @@ window.onload = function(){
 			var $blockIdField = $('#setValueBox > table > tbody > tr:nth-child(4) > td:nth-child(2) > input[type="text"]');
 			var chosedBlockId = $blockIdField.val();
 			var chosedBlock = workspace.getBlockById(chosedBlockId);
+			var newId = $('#setValueBox > table > tbody > tr:nth-child(6) > td:nth-child(2) > input[type="text"]').val();
 
-			chosedBlock.data = 'folderName: '+folderName+' folderId: '+ $('#setValueBox > table > tbody > tr:nth-child(6) > td:nth-child(2) > input[type="text"]').val()+ ' type:folder'
+			var oData = {"folderName":folderName,"folderId":newId,"type":"folder"};
+			chosedBlock.data = JSON.stringify(oData);
 			updateVariableOptions();
 
 			console.log(chosedBlock);
@@ -292,9 +297,10 @@ window.onload = function(){
 					currentBlock = currentBlock.getNextBlock();
 				}
 				var data = currentBlock.data;
+				var oData = JSON.parse(data);
+				variable = oData['folderName'];
 				var variableArray = data.split(' ');
-				variable = variableArray[1];
-				ainsVariables[variable] = {'folderId' : variableArray[3], 'type' : variableArray[5], 'blockId': currentBlock.id};
+				ainsVariables[variable] = {'folderId' : oData['folderId'], 'type' :oData['type'], 'blockId': currentBlock.id};
 				currentBlock = currentBlock.getNextBlock();
 			}
 			//update the options dropdown selector
