@@ -164,11 +164,7 @@ window.onload = function(){
 							text: option[0],
 						}));
 					}
-					console.log($optionsList.html());
-					console.log(options);
 					$optionsList.val(value);
-
-	
 					$currentOption.html(value);
 				}
 			}
@@ -235,7 +231,6 @@ window.onload = function(){
 		var ainsVariables = {};
 
 		$setValueBtn.on('click', $setValueBtn, setValueBtnHandler);
-
 		function setValueBtnHandler() {
 			// var block = AinsBlockly.getSelectedBlock();
 			// var rootBlock = block.getRootBlock();
@@ -249,6 +244,19 @@ window.onload = function(){
 			// console.log(AinsBlockly.getSelectedBlock().getRootBlock().data);
 			//console.log(rootBlock);
 			//console.log(block.data);
+			// var block = AinsBlockly.getSelectedBlock();
+			// var rootBlock = block.getRootBlock();
+			// var currentBlock = rootBlock;
+			var $selectVariables = $('#selectVariables');
+			var folderName = $selectVariables.val();
+			var $blockIdField = $('#setValueBox > table > tbody > tr:nth-child(4) > td:nth-child(2) > input[type="text"]');
+			var chosedBlockId = $blockIdField.val();
+			var chosedBlock = workspace.getBlockById(chosedBlockId);
+
+			chosedBlock.data = 'folderName: '+folderName+' folderId: '+ $('#setValueBox > table > tbody > tr:nth-child(6) > td:nth-child(2) > input[type="text"]').val()+ ' type:folder'
+			updateVariableOptions();
+
+			console.log(chosedBlock);
 			console.log(ainsVariables);
 			$setValueBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
@@ -256,41 +264,50 @@ window.onload = function(){
 		
 		}
 
+		$selectVariables.on('change', $selectVariables, changeVariableHandler);
+		function changeVariableHandler(){
+			var variable = $selectVariables.val();
+			updateProperties_(variable);
+		}
+
 		function updateProperties_(variable){
 			$properties.closest("tr").next().remove();
 			$properties.closest("tr").next().remove();
+			$properties.closest("tr").next().remove();
+			//$properties.closest("tr").next().remove();
 			$.each(ainsVariables[variable],function(key,value){
 				$properties.closest("tr").after($('<tr>').append($('<td>',{text:key})).append($('<td>').append($('<input>',{type:'text',value:value}))));
 			});
 		}
 
-		return {
-			updateVariableOptions: function() {
-
-				//update the available variables 
-				ainsVariables = {};
-				var block = AinsBlockly.getSelectedBlock();
-				var rootBlock = block.getRootBlock();
-				var currentBlock = rootBlock;
-				var variable = '';
-				while (currentBlock.id != block.id) {
-					if (currentBlock.getField('options').getText() != 'getFolder()') {
-						currentBlock = currentBlock.getNextBlock();
-					}
-					var data = currentBlock.data;
-					var variableArray = data.split(' ');
-					variable = variableArray[1];
-					ainsVariables[variable] = {'folderId' : variableArray[3], 'type' : variableArray[5]};
+		function updateVariableOptions() {
+			//update the available variables 
+			ainsVariables = {};
+			var block = AinsBlockly.getSelectedBlock();
+			var rootBlock = block.getRootBlock();
+			var currentBlock = rootBlock;
+			var variable = '';
+			while (currentBlock.id != block.id) {
+				if (currentBlock.getField('options').getText() != 'getFolder()') {
 					currentBlock = currentBlock.getNextBlock();
 				}
-				//update the options dropdown selector
-				$selectVariables.empty();
-				$.each(ainsVariables, function(key, value){
-					$selectVariables.append($('<option>',{text:key}));
-				});
-				var variable = $selectVariables.val();
-				updateProperties_(variable);
+				var data = currentBlock.data;
+				var variableArray = data.split(' ');
+				variable = variableArray[1];
+				ainsVariables[variable] = {'folderId' : variableArray[3], 'type' : variableArray[5], 'blockId': currentBlock.id};
+				currentBlock = currentBlock.getNextBlock();
 			}
+			//update the options dropdown selector
+			$selectVariables.empty();
+			$.each(ainsVariables, function(key, value){
+				$selectVariables.append($('<option>',{text:key}));
+			});
+			var variable = $selectVariables.val();
+			updateProperties_(variable);
+		}
+
+		return {
+			updateVariableOptions: updateVariableOptions,
 		}
 	})();
 
