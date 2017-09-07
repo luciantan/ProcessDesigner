@@ -37,7 +37,8 @@ window.onload = function(){
 		onresize();
 		Blockly.svgResize(workspace);
 
-		var selectedBlock_ = workspace.newBlock();
+		//var selectedBlock_ = workspace.newBlock();
+		var selectedBlock_ = null;
 
 
 		return {
@@ -150,7 +151,7 @@ window.onload = function(){
 					$conditionBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 						$getFolderBox.hide({duration:250,effect:'slide', direction:'right'});
 						$setValueBox.hide({duration:250,effect:'slide', direction:'right'});
-
+						$invokeBox.hide({duration:250, effect:'slide', direction:'right'});
 						$invokeBox.show({duration:250, effect:'slide', direction:'right'});
 					},});
 					var field = block.getField('options');
@@ -170,6 +171,22 @@ window.onload = function(){
 			}
 		};
 
+		$optionsList.on('change', $optionsList, changeOptionListHandler);
+		function changeOptionListHandler(){
+			var option = $optionsList.val();
+			$currentOption.html(option);
+			var block = AinsBlockly.getSelectedBlock();
+			var field = block.getField('options');
+			field.setText(option);
+
+		};
+
+		// $selectVariables.on('change', $selectVariables, changeVariableHandler);
+		// function changeVariableHandler(){
+		// 	var variable = $selectVariables.val();
+		// 	updateProperties_(variable);
+		// }
+
 		$optionBtn.on('click', $optionBtn, function(){
 			var block = AinsBlockly.getSelectedBlock();
 			var field = block.getField('options');
@@ -184,6 +201,7 @@ window.onload = function(){
 		});
 
 		function openGetFolderBox(){
+			getFolderMethod.updateGetFolderBox();
 			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$getFolderBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
@@ -216,12 +234,30 @@ window.onload = function(){
 			var oData = {"folderName":variable,"folderId":folderId,"type":"folder"};
 			block.data = JSON.stringify(oData);
 			console.log(block.data);
-			//block.data = '{folderName: ' + variable + ' folderId: ' + folderId + ' type: folder}';
 			AinsBlockly.setSelectedBlock(block);
 			$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
 		};
+
+		function updateGetFolderBox(){
+			var block = AinsBlockly.getSelectedBlock();
+			var data = block.data;
+			console.log(data);
+			if (data == 'ainsDo') {
+				$folderId.val('');
+				$variable.val('');
+			} else {
+				oData = JSON.parse(data);
+				$folderId.val(oData.folderId);
+				$variable.val(oData.folderName);
+			}
+			
+		};
+
+		return {
+			updateGetFolderBox : updateGetFolderBox,
+		}
 	})();
 
 	var setValueMethod = (function(){
@@ -256,9 +292,13 @@ window.onload = function(){
 			var chosedBlockId = $blockIdField.val();
 			var chosedBlock = workspace.getBlockById(chosedBlockId);
 			var newId = $('#setValueBox > table > tbody > tr:nth-child(6) > td:nth-child(2) > input[type="text"]').val();
-
+			//update the properties of the selected block
 			var oData = {"folderName":folderName,"folderId":newId,"type":"folder"};
-			chosedBlock.data = JSON.stringify(oData);
+			console.log(JSON.stringify(oData));
+			if (chosedBlock) {
+				chosedBlock.data = JSON.stringify(oData);
+			}
+			
 			updateVariableOptions();
 
 			console.log(chosedBlock);
@@ -275,6 +315,7 @@ window.onload = function(){
 			updateProperties_(variable);
 		}
 
+		//When folder is changed, or before the setValueBox is opened, update the properties input table. 
 		function updateProperties_(variable){
 			$properties.closest("tr").next().remove();
 			$properties.closest("tr").next().remove();
@@ -290,16 +331,27 @@ window.onload = function(){
 			ainsVariables = {};
 			var block = AinsBlockly.getSelectedBlock();
 			var rootBlock = block.getRootBlock();
+			if (block.getSurroundParent()) {
+				rootBlock = block.getSurroundParent().getChildren()[0];
+			}
 			var currentBlock = rootBlock;
 			var variable = '';
 			while (currentBlock.id != block.id) {
-				if (currentBlock.getField('options').getText() != 'getFolder()') {
+				//If current block is not a do block or getFolder block
+				if (currentBlock.getField('options') == null || currentBlock.getField('options').getText() != 'getFolder()') {
 					currentBlock = currentBlock.getNextBlock();
 				}
+				console.log(currentBlock);
 				var data = currentBlock.data;
-				var oData = JSON.parse(data);
+				if (data == 'ainsDo') {
+					alert('some block above is not initiated');
+					break;
+				} else {
+					var oData = JSON.parse(data);
+				}
+				
 				variable = oData['folderName'];
-				var variableArray = data.split(' ');
+				
 				ainsVariables[variable] = {'folderId' : oData['folderId'], 'type' :oData['type'], 'blockId': currentBlock.id};
 				currentBlock = currentBlock.getNextBlock();
 			}
