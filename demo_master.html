@@ -8,10 +8,12 @@
 	<script src="jquery-ui.js"></script>
 	<script src="blockly_compressed.js"></script>
 	<script src="javascript_compressed.js"></script>
-	<script src="blocks_compressed.js"></script>
+	<!-- <script src="blocks_compressed.js"></script> -->
 	<script src="ainsBlocks.js"></script>
 	<script src="msg/js/en.js"></script>
+	<script src="jquery.slidereveal.min.js"></script>
 	<link href="jquery-ui.css" rel="stylesheet">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
 	<!-- <style>
          .ui-widget-header,.ui-state-default, ui-button {
@@ -20,42 +22,183 @@
             color: #FFFFFF;
             font-weight: bold;
          }
-      </style> -->
-</head>
-<body>
-	<div id="test">
-		<input type="button" name="button" value="test jquery">
-	</div>
-	<div id="dialog" title="Basic dialog" style="display:none">
-	  <p>This is the default dialog which is usseful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
-	</div>
+     </style> -->
+     <style type="text/css">
+     	.col-sm-10 {
+     		padding:0px;
+     	}
+     	.col-sm-2 {
+     		padding:0px;
+     	}
+     	
+     </style>
 
-	<div id="dialogCondition" title="Edit your condition:" style="display:none">
-		<p>Your current condition is: <span id="previousCondition"></span>.</p>
-		<input type="text" name="firstArgument" placeholder="First Argument">
-		<input type="text" name="operator" placeholder="=" style="width:20">
-		<input type="text" name="secondArgument" placeholder="Second Argument">
+ </head>
+ <body>
 
-		<input type="button" class="btn" name="submit" value="add">
-		<input type="button" class="btn" name="submit" value="delete">
-	</div>
+ 	<!-- <div id="dialog" title="Basic dialog" style="display:none">
+ 		<p>This is the default dialog which is usseful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+ 	</div> -->
 
-	<script type="text/javascript">
-		$(function(){
-			//$("#dialog").dialog();
-			$("#test").click(function(){
-				var $newDialog = $("#dialog").dialog();
+	
+	
+	<div class="row">
+		<div class="col-sm-8">
+			<div id="blocklyArea"></div>
+			<div id="blocklyDiv" style="height: 880px; width: 1200px;"></div>
+			<!-- <div id="blocklyDiv" style="position:absolute"></div> -->
+		</div>
+		<div class="col-sm-4">
+			<div class="container" style="height:400px;">
+				<div class="container" id="conditionBox" style="height: 400px;display: none;">
+					<div title="Edit your condition:">
+						<table>
+							<tr>
+								<td>
+									<p>Your current condition is: </p>
+								</td>
+								<td>
+									<p id="previousCondition"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Your current comment is: </p>
+								</td>
+								<td>
+									<p id="previousComment"></p>
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Enter new condition:</p>
+								</td>
+								<td>
+									<input type="text" name="condition" id="newCondition" placeholder="eg: A > B">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<p>Enter new comment:</p>
+								</td>
+								<td>
+									<input type="text" name="comment" id="newComment" placeholder="my comment">
+								</td>
+							</tr>
+							<tr>
+								<td>
+									<input type="button" name="button" id="addConditionBtn" value="OK">
+								</td>
+							</tr>
+						</table>
+					</div>
+					
+				</div>
+				<!-- <div class="container" id="invokeBox" style="display: none;"> -->
+				<div class="container" id="invokeBox" style="height: 400px;display: none;">
+					<table>
+						<tr>
+							<td>
+								<p>Select function:</p>
+							</td>
+							<td id="invokeOptions">
+								<select name="options" id="options">
+									
+								</select> 
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<p>Current option:</p>
+							</td>
+							<td id="currentOption">
+								
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" name="button" id="changeOptionBtn" value="OK">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="container" id="getFolderBox" style="height:400px; display:none;">
+					<table>
+						<tr>
+							<th>input:</th>
+						</tr>
+						<tr>
+							<td>
+								Folder ID:
+							</td>
+							<td>
+								<input type="text" name="folderId" id="folderId" placeholder="a123422">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								Variable Name:
+							</td>
+							<td>
+								<input type="text" name="variableName" id="variableName" placeholder="x">
+							</td>
+						</tr>
+						<tr>
+							<td>
+								<input type="button" name="button" id="getFolderBtn" value="OK">
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="container" id="setValueBox" style="height:400px; display:none;">
+					<table>
+						<tr>
+							<th>
+								choose a variable:
+							</th>
+						</tr>
+						<tr>
+							<td>
+								<select name="options" id="selectVariables"></select>
+							</td>
+						</tr>
+						<tr >
+							<th id="properties">Properties:</th>
+						</tr>
+						<tr></tr>
+						<tr></tr>
+						<tr></tr>
+						<tr>
+							<td>
+								<input type="button" name="setValueBtn" id="setValueBtn" value="OK">
+							</td>
+						</tr>
+					</table>		
+				</div>
+			</div>
+			<!-- <div class="container" id="conditionBox" style="display:none"> -->
+			
+			<div class="container" id="xmlBox">
+				<table>
+					<tr>
+						<td id="xmlDisplay">
+							
+						</td>
+					</tr>
+				</table>
+			</div>
+		</div>
 
-			});
-		});
-	</script>
 
 
 
-	<div id="blocklyDiv" style="height: 800px; width: 1200px; float:left;"></div>
-	<div id="textarea"></div>
 
-	<xml id="toolbox" style="display: none">
+
+		<xml id="toolbox" style="display: none">
+
+			<label text="Procedure Designer" web-class="myLabelStyle"></label>
+			
+			<sep gap="120"></sep>
 	  <!-- <block type="controls_if"></block>
 	  <block type="controls_repeat_ext"></block>
 	  <block type="logic_compare"></block>
@@ -63,124 +206,17 @@
 	  <block type="math_arithmetic"></block>
 	  <block type="text"></block>
 	  <block type="text_print"></block> -->
-	  <block type="ains_invoke"></block>
+	  <block type="ains_do"></block>
+	  <sep gap="40"></sep>
+
 	  <block type="ains_if"></block>
+	  <sep gap="40"></sep>
+
 	  <block type="ains_while"></block>
 	  <!-- <block type="math_change"></block> -->
 	  <!-- <block type="logic_compare" color="green"></block> -->
 	</xml>
-	<script>
-		window.onload = function() {
-			createAinsBlocks();
-			
-
-
-			var workspace = Blockly.inject('blocklyDiv',
-		      {
-		      	toolbox: document.getElementById('toolbox'),
-				grid:
-			         {spacing: 20,
-			          length: 3,
-			          colour: '#ccc',
-			          snap: true},
-			    trashcan: true,
-			    horizontalLayout: false,
-			    readOnly:false,
-			    scrollbars:true,
-			    //toolboxPosition:"start",
-		      });
-			// function myUpdateFunction(event) {
-			// 	var code = Blockly.JavaScript.workspaceToCode(workspace);
-			// 	document.getElementById('textarea').value = code;
-			// }
-			workspace.addChangeListener(function(event){
-			 	if (event.type == Blockly.Events.MOVE) {
-				 	var xml = Blockly.Xml.workspaceToDom(workspace);
-					var xml_text = Blockly.Xml.domToPrettyText(xml);
-
-					console.log(xml_text);
-			 	}
-			 	
-			 });
-			workspace.addChangeListener(onClicking);
-
-			function onClicking(event) {
-				if (event.type == Blockly.Events.UI && event.element == 'click') {
-					//Using jQuery to create a dialog
-					var blockId = event.blockId;
-					var block = workspace.getBlockById(blockId);
-					var inputList = block.inputList;
-					console.log(block);
-					console.log(inputList);
-
-					if (block.type == 'ains_invoke') {
-						var textData = inputList[0].fieldRow[1].text_;
-						console.log(textData);
-						//workspace.getBlockById(blockId).inputList[0].fieldRow[2].text_ = 'you clicked me, so text is changed';
-					} else if (block.type == 'ains_if') {
-						var ifCondition = inputList[0].fieldRow[1].text_;
-
-						console.log(ifCondition);
-						createDialog(ifCondition);
-
-						// var textInput = 'you clicked me, so condition is changed';
-
-						// //workspace.getBlockById(blockId).getField('condition').setText(textInput);
-						// block.getField('condition').setText(textInput);
-
-
-						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].text_ = textInput;
-						 // workspace.getBlockById(blockId).inputList[0].fieldRow[1].textElement_.innerHTML = textInput;
-
-					} else if (block.type == 'ains_while') {
-						var whileCondition = inputList[0].fieldRow[1].text_;
-						console.log(whileCondition);
-						createDialog(whileCondition);
-
-						// var textInput = 'you clicked me, so condition is changed';
-						// block.getField('condition').setText(textInput);
-					}
-				}
-				function createDialog(typeCondition) {
-
-					$("#previousCondition").html(typeCondition);
-					var $dialog = $("#dialogCondition").dialog({autoOpen: false,});
-
-					
-					$dialog.dialog("option","modal","true");
-					$dialog.dialog("option","width",780);
-					$dialog.dialog("option","height",400);
-					$dialog.dialog("option","height","auto");
-					$dialog.dialog("option","show",{effect:"blind",duration:200,});
-					$dialog.dialog("option","hide",{effect:"blind",duration:200,});
-					$dialog.dialog({open:function(event, ui){
-						$('.ui-widget-overlay').bind('click',function(){
-							$dialog.dialog('close');
-						});
-					}});
-
-
-
-					$dialog.dialog({ buttons: [ { text: "Ok", click: function() { $( this ).dialog( "close" ); } } ] });
-
-					$dialog.dialog("open");
-
-
-				}
-
-			}
-
-			// workspace.addChangeListener(Blockly.Events.Move, function(){
-			// 	var xml = Blockly.Xml.workspaceToDom(workspace);
-			// 	var xml_text = Blockly.Xml.domToPrettyText(xml);
-
-			// 	console.log(xml_text);
-			// });
-
-			
-			
-		}
-	  
-	</script>
+	
+	<script type="text/javascript" src="app1.js"></script>
 </body>
 </html>
