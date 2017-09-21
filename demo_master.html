@@ -39,8 +39,103 @@
  	<!-- <div id="dialog" title="Basic dialog" style="display:none">
  		<p>This is the default dialog which is usseful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
  	</div> -->
-
-	
+ 	<div id="processConfiguration">
+ 		<form action="#">
+ 			<fieldset>
+ 				<div class="container">
+ 					<h3>Process Configuration</h3>
+ 				</div>
+ 				<hr>
+ 				<br>
+ 				<div class="container">
+					<h4>1. Process Name:</h4>
+ 					<div class="input-group">
+ 						<span class="input-group-addon">Process Name</span>
+  						<input type="text" class="form-control" placeholder="myProcess" id="processNameConfigure">
+ 					</div>
+ 				</div>
+ 				<br>
+ 				<hr>
+ 				<div class="container">
+ 					<h4>2. Inputs:</h4>
+	 				<table class="table table-hover table-sm table-responsive">
+	 					<thead class="thead-default">
+		 					<tr>
+		 						<th>#</th>
+		 						<th>Variable Name:</th>
+		 						<th>Data type:</th>
+		 						<th>Delete Variable</th>
+		 						<!-- <th colspan="2">Add and Delete</th> -->
+		 					</tr>
+	 					</thead>
+	 					<tbody id="inputTableBody">
+		 					<tr id="inputTableSeed">
+		 						<th scope="row">1</th>
+		 						<td>
+		 							<input type="text" name="inputVariable" placeholder="e.g. x">
+		 						</td>
+		 						<td>
+					 				<select class="custom-select">
+					 					<option>int</option>
+					 					<option selected="selected">string</option>
+					 					<option>decimal</option>
+					 					<option>boolean</option>
+					 					<option>Date</option>
+					 					<option>DataTable</option>
+					 				</select>
+		 						</td>
+		 						<td>
+		 							<button type="button" class="btn btn-danger deleteInputBtn">Delete</button>
+		 						</td>
+		 					</tr>
+	 					</tbody>
+	 				</table>
+	 				<button type="button" class="btn btn-success" id="addInputBtn">Add another</button>
+ 				</div>
+ 				<br>
+ 				<hr>
+				<div class="container">
+ 					<h4>3. Outputs:</h4>
+	 				<table class="table table-hover table-sm table-responsive">
+	 					<thead class="thead-default">
+		 					<tr>
+		 						<th>#</th>
+		 						<th>Variable Name:</th>
+		 						<th>Data type:</th>
+		 						<th>Delete Variable</th>
+		 						<!-- <th colspan="2">Add and Delete</th> -->
+		 					</tr>
+	 					</thead>
+	 					<tbody id="outputTableBody">
+		 					<tr id="outputTableSeed">
+		 						<th scope="row">1</th>
+		 						<td>
+		 							<input type="text" name="inputVariable" placeholder="e.g. x">
+		 						</td>
+		 						<td>
+					 				<select class="custom-select">
+					 					<option>int</option>
+					 					<option selected="selected">string</option>
+					 					<option>decimal</option>
+					 					<option>boolean</option>
+					 					<option>Date</option>
+					 					<option>DataTable</option>
+					 				</select>
+		 						</td>
+		 						<td>
+		 							<button type="button" class="btn btn-danger deleteOutputBtn">Delete</button>
+		 						</td>
+		 					</tr>
+	 					</tbody>
+	 				</table>
+	 				<button type="button" class="btn btn-success" id="addOutputBtn">Add another</button>
+ 				</div>
+ 			</fieldset>
+ 		</form>
+ 	</div>
+	<div class = "row">
+		<div class="col-sm-8">Welcome to process: <span id="processName"></span></div>
+	</div>
 	
 	<div class="row">
 		<div class="col-sm-8">

@@ -50,6 +50,94 @@ window.onload = function(){
 
 	})();
 
+	var processConfiguration = (function(){
+		var $processConfiguration = $('#processConfiguration');
+		var $processNameConfigure = $('#processNameConfigure');
+		var $dataType = $('#dataType');
+
+		var $inputTableSeed = $('#inputTableSeed');
+		var $inputTableBody = $('#inputTableBody');
+		var inputTableSeed = $inputTableSeed.parent().html();
+
+		var $outputTableSeed = $('#outputTableSeed');
+		var $outputTableBody = $('#outputTableBody');
+		var outputTableSeed = $outputTableSeed.parent().html();
+
+		var $processName = $('#processName');
+		var configuration = {};
+		
+		$processConfiguration.on('click','#addInputBtn', addInputVariableHandler);
+
+		function addInputVariableHandler(){
+			
+			$inputTableBody.append($(inputTableSeed));
+			
+		};
+
+		$processConfiguration.on('click','.deleteInputBtn', deleteInputVariableHandler);
+
+		function deleteInputVariableHandler(event){
+			var $tr = $(event.target).closest('tr');
+			if ($tr.siblings().length !== 0) {
+				$tr.remove();
+			} else {
+				$inputTableBody.append($(inputTableSeed));
+				$tr.remove();
+			}
+		};
+
+		$processConfiguration.on('click','#addOutputBtn', addOutputVariableHandler);
+
+		function addOutputVariableHandler(){
+			$outputTableBody.append($(outputTableSeed));
+		};
+
+		$processConfiguration.on('click','.deleteOutputBtn', deleteOutputVariableHandler);
+
+		function deleteOutputVariableHandler(event){
+			var $tr = $(event.target).closest('tr');
+			if ($tr.siblings().length !== 0) {
+				$tr.remove();
+			} else {
+				$outputTableBody.append($(outputTableSeed));
+				$tr.remove();
+			}
+		};
+
+		$processConfiguration.dialog({
+			height:"auto",
+			width: 800,
+			modal: true,
+			buttons:{
+				"Complete Configuration": completeConfigurationHandler,
+			}
+		});
+
+		function completeConfigurationHandler(){
+			//alert('submit!');
+			configuration.processName = $processNameConfigure.val();
+
+			$('#processName').html(configuration.processName);
+			
+
+			$(this).dialog('close');
+		};
+
+		return {
+			configuration: configuration,
+		}
+
+
+
+
+
+
+
+		// $processName.html('process name');
+		// $dataType.selectmenu().selectmenu("menuWidget").addClass("overflow");
+
+	}());
+
 	var AinsXml = (function(){
 		var xml = null;
 		var $xmlDisplay = $('#xmlDisplay');
