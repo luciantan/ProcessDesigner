@@ -92,6 +92,8 @@ function createAinsBlocks(){
       this.appendDummyInput()
           .appendField("Error:")
           .appendField(new Blockly.FieldTextInput("default"), "NAME");
+      this.setPreviousStatement(true, null);
+      this.setNextStatement(true, null);
       this.setColour(230);
    this.setTooltip("");
    this.setHelpUrl("");

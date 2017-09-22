@@ -315,7 +315,7 @@ window.onload = function(){
 		}
 
 		function openSetBox(){
-
+			setMethod.readConfiguration();
 			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$setBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
@@ -478,26 +478,81 @@ window.onload = function(){
 		var workspace = AinsBlockly.workspace;
 		var $setBox = $('#setBox');
 		var availableVars = {};
+		var variables = {};
+
 		var $addVarBtn = $('#addVarBtn');
 		var $setTableBody = $('#setTableBody');
 		var $setTableSeed = $('#setTableSeed');
 		var setTableSeed = $setTableSeed.parent().html();
 
+		var $submitVarsBtn = $('#submitVarsBtn');
+		var $cancelSubmitVarsBtn = $('#cancelSubmitVarsBtn');
+
+		var $availableVarsList = $('#availableVarsList');
+
 
 
 		$addVarBtn.on('click', $addVarBtn, addVarBtnHandler);
+		//1. add another variable in table
+		//2. update the availableVars{}
+		//3. update the available variables list
 		function addVarBtnHandler(){
 			$setTableBody.append($(setTableSeed));
+
+			var latestNewVariable = $setTableBody.find("tr:nth-last-child(2)").find('input.variable').val();
+			var latestNewValue = $setTableBody.find("tr:nth-last-child(2)").find('input.value').val();
+			availableVars[latestNewVariable] = latestNewValue;
+			
+			console.log(availableVars);
+			updateAvailableVarsList(latestNewVariable, "need check MH", latestNewValue);
+			//$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html(inputs[key])).append($('<td>').html('from input')));
+
 		};
-		// var configuration = processConfiguration.configuration;
-		// var inputs = configuration.input;
-		// console.log(inputs);
-		// for (var key in inputs) {
-		// 	if (inputs.hasOwnProperty(key)) {
-		// 		alert(key +" : " + inputs[key] );
-		// 	}
-		// }
+		function updateAvailableVarsList(a, b, c){
+			$availableVarsList.append($('<tr>').append($('<td>').html(a)).append($('<td>').html(b)).append($('<td>').html(c)));
+			variables[a] = c;
+		}
+
+
+		$setBox.on('click','.deleteInputBtn', deleteInputVariableHandler);
+
+		function deleteInputVariableHandler(event){
+			var $tr = $(event.target).closest('tr');
+			if ($tr.siblings().length !== 0) {
+				$tr.remove();
+			} else {
+
+				$setTableBody.append($(setTableSeed));
+				$tr.remove();
+
+			}
+		};
 		
+		function readConfiguration(){
+			var configuration = processConfiguration.configuration;
+			var inputs = configuration.input;
+			
+			//1. put input variables from the configuration to the available variables list
+			//2. update the availableVars{}
+			for (var key in inputs) {
+				if (inputs.hasOwnProperty(key)) {
+					availableVars[key] = inputs[key];
+					$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html(inputs[key])).append($('<td>').html('from input')));
+				}
+			}
+
+			console.log(availableVars); 
+		};
+
+		$submitVarsBtn.on('click', $submitVarsBtn, submitVarsBtnHandler);
+		function submitVarsBtnHandler(){
+			var data = JSON.stringify(variables);
+			console.log(data);
+		};
+
+		return {
+			readConfiguration:readConfiguration,
+		}
 
 	})();
 
