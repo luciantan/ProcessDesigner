@@ -64,7 +64,11 @@ window.onload = function(){
 		var outputTableSeed = $outputTableSeed.parent().html();
 
 		var $processName = $('#processName');
+
+		var $openConfigurationBtn = $('#openConfigurationBtn');
 		var configuration = {};
+		configuration.input = {};
+		configuration.output = {};
 		
 		$processConfiguration.on('click','#addInputBtn', addInputVariableHandler);
 
@@ -114,27 +118,30 @@ window.onload = function(){
 		});
 
 		function completeConfigurationHandler(){
-			//alert('submit!');
+			//Update the configurations and put the processName on the main page
 			configuration.processName = $processNameConfigure.val();
 
+			$inputTableBody.find("tr").each(function(rowIndex, c){
+				var variableName = $(this).find('input').val();
+				var dataType = $(this).find('select').val();
+				configuration.input[variableName] = dataType;
+			});
+			$outputTableBody.find("tr").each(function(rowIndex, c){
+				var variableName = $(this).find('input').val();
+				var dataType = $(this).find('select').val();
+				configuration.output[variableName] = dataType;
+			});
 			$('#processName').html(configuration.processName);
-			
-
 			$(this).dialog('close');
 		};
+
+		$openConfigurationBtn.on("click", function(){
+			$processConfiguration.dialog("open");
+		});
 
 		return {
 			configuration: configuration,
 		}
-
-
-
-
-
-
-
-		// $processName.html('process name');
-		// $dataType.selectmenu().selectmenu("menuWidget").addClass("overflow");
 
 	}());
 
@@ -228,6 +235,7 @@ window.onload = function(){
 		var $conditionBox = $('#conditionBox');
 		var $getFolderBox = $('#getFolderBox');
 		var $setValueBox = $('#setValueBox');
+		var $setBox = $('#setBox');
 
 		workspace.addChangeListener(clickingDoBlockHandler);
 		function clickingDoBlockHandler(event){
@@ -285,6 +293,8 @@ window.onload = function(){
 				openGetFolderBox();
 			} else if (selectedOption == 'setValue()') {
 				openSetValueBox();
+			} else if (selectedOption == 'set') {
+				openSetBox();
 			};
 		});
 
@@ -303,6 +313,13 @@ window.onload = function(){
 				$setValueBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
 		}
+
+		function openSetBox(){
+
+			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$setBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		};
 
 	})();
 
@@ -355,7 +372,7 @@ window.onload = function(){
 		var $setValueBtn = $('#setValueBtn');
 		var $properties = $('#properties');
 		var $invokeBox = $('#invokeBox');
-		var ainsVariables = {};
+		var ainsVariables = processConfiguration.configuration;
 
 		$setValueBtn.on('click', $setValueBtn, setValueBtnHandler);
 		function setValueBtnHandler() {
@@ -457,11 +474,31 @@ window.onload = function(){
 		}
 	})();
 
+	var setMethod = (function(){
+		var workspace = AinsBlockly.workspace;
+		var $setBox = $('#setBox');
+		var availableVars = {};
+		var $addVarBtn = $('#addVarBtn');
+		var $setTableBody = $('#setTableBody');
+		var $setTableSeed = $('#setTableSeed');
+		var setTableSeed = $setTableSeed.parent().html();
 
 
 
+		$addVarBtn.on('click', $addVarBtn, addVarBtnHandler);
+		function addVarBtnHandler(){
+			$setTableBody.append($(setTableSeed));
+		};
+		// var configuration = processConfiguration.configuration;
+		// var inputs = configuration.input;
+		// console.log(inputs);
+		// for (var key in inputs) {
+		// 	if (inputs.hasOwnProperty(key)) {
+		// 		alert(key +" : " + inputs[key] );
+		// 	}
+		// }
+		
 
-
-
+	})();
 
 };
