@@ -131,7 +131,10 @@ window.onload = function(){
 				var dataType = $(this).find('select').val();
 				configuration.output[variableName] = dataType;
 			});
+			//Update the process name on the top
 			$('#processName').html(configuration.processName);
+			//update the input variables for the setMethod
+			setMethod.readConfiguration();
 			$(this).dialog('close');
 		};
 
@@ -529,6 +532,7 @@ window.onload = function(){
 		};
 		
 		function readConfiguration(){
+			$availableVarsList.empty();
 			var configuration = processConfiguration.configuration;
 			var inputs = configuration.input;
 			
@@ -548,6 +552,11 @@ window.onload = function(){
 		function submitVarsBtnHandler(){
 			var data = JSON.stringify(variables);
 			console.log(data);
+			//update the data in the block:
+			//1. get the current block
+			var block = AinsBlockly.getSelectedBlock();
+			block.data = data;
+
 		};
 
 		return {
