@@ -82,6 +82,10 @@ window.onload = function(){
 
 		function deleteInputVariableHandler(event){
 			var $tr = $(event.target).closest('tr');
+			//update configuration.input
+			var deletedVal = $tr.find('input').val();
+			delete configuration.input[deletedVal];
+			//update the UI
 			if ($tr.siblings().length !== 0) {
 				$tr.remove();
 			} else {
@@ -100,6 +104,10 @@ window.onload = function(){
 
 		function deleteOutputVariableHandler(event){
 			var $tr = $(event.target).closest('tr');
+			//update configuration.input
+			var deletedVal = $tr.find('input').val();
+			delete configuration.input[deletedVal];
+			//update the UI
 			if ($tr.siblings().length !== 0) {
 				$tr.remove();
 			} else {
@@ -133,7 +141,7 @@ window.onload = function(){
 			});
 			//Update the process name on the top
 			$('#processName').html(configuration.processName);
-			//update the input variables for the setMethod
+			//update the input variables for the setMethod based on the configuration{} object.
 			setMethod.readConfiguration();
 			$(this).dialog('close');
 		};
@@ -500,28 +508,54 @@ window.onload = function(){
 		//2. update the availableVars{}
 		//3. update the available variables list
 		function addVarBtnHandler(){
-			$setTableBody.append($(setTableSeed));
-
-			var latestNewVariable = $setTableBody.find("tr:nth-last-child(2)").find('input.variable').val();
-			var latestNewValue = $setTableBody.find("tr:nth-last-child(2)").find('input.value').val();
-			availableVars[latestNewVariable] = latestNewValue;
 			
-			console.log(availableVars);
-			updateAvailableVarsList(latestNewVariable, "need check MH", latestNewValue);
-			//$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html(inputs[key])).append($('<td>').html('from input')));
-
+			//_updateAvailableVarsList();
+			_updateAvailableVarsList();
+			$setTableBody.append($(setTableSeed));
 		};
-		function updateAvailableVarsList(a, b, c){
-			$availableVarsList.append($('<tr>').append($('<td>').html(a)).append($('<td>').html(b)).append($('<td>').html(c)));
-			variables[a] = c;
+
+		function _updateAvailableVarsList(){
+			var $tr = $setTableBody.find("tr");
+			//empty the variables object and refill it with the current variables list
+			variables = {};
+			readConfiguration();
+
+			$tr.each(function(){
+				var variable = $(this).find("input.variable").val();
+				var value = $(this).find("input.value").val();
+
+				variables[variable] = value;
+				availableVars[variable] = value;
+			});
+
+			addVariableListToAvailableVarsList();
+
 		}
+
+		// function _updateAvailableVarsList(){
+
+		// 	var latestNewVariable = $setTableBody.find("tr:nth-last-child(1)").find('input.variable').val();
+		// 	var latestNewValue = $setTableBody.find("tr:nth-last-child(1)").find('input.value').val();
+		// 	availableVars[latestNewVariable] = latestNewValue;
+		// 	$availableVarsList.append($('<tr>').append($('<td>').html(latestNewVariable)).append($('<td>').html("need check MH")).append($('<td>').html(latestNewValue)));
+		// 	variables[latestNewVariable] = latestNewValue;
+		
+		// }
 
 
 		$setBox.on('click','.deleteInputBtn', deleteInputVariableHandler);
 
 		function deleteInputVariableHandler(event){
+
 			var $tr = $(event.target).closest('tr');
+
+			var deletedVar = $tr.find("input.variable").val();
+			delete availableVars[deletedVar];
+			delete variables[deletedVar];
+
+			addVariableListToAvailableVarsList();
 			if ($tr.siblings().length !== 0) {
+				// console.log($tr.html());
 				$tr.remove();
 			} else {
 
@@ -548,14 +582,25 @@ window.onload = function(){
 			console.log(availableVars); 
 		};
 
+		function addVariableListToAvailableVarsList() {
+			readConfiguration();
+			for (var key in variables) {
+				availableVars[key] = variables[key];
+				$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html("discuss with MH")).append($('<td>').html(variables[key])));
+			}
+		}
+
 		$submitVarsBtn.on('click', $submitVarsBtn, submitVarsBtnHandler);
 		function submitVarsBtnHandler(){
+			_updateAvailableVarsList();
 			var data = JSON.stringify(variables);
 			console.log(data);
 			//update the data in the block:
 			//1. get the current block
+			//2. set the data inside of the block
 			var block = AinsBlockly.getSelectedBlock();
 			block.data = data;
+
 
 		};
 
