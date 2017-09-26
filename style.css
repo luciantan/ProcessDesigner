@@ -1,0 +1,22 @@
+#rightPanel{
+	/*background: red;*/
+	float:left;
+
+}
+
+.scrollable1{
+	/*height:250px;*/
+	overflow: scroll;
+}
+
+#xmlBox {
+	float: left;
+	clear:left;
+}
+.col-sm-10 {
+	padding : 0px;
+}
+.col-sm-2 {
+	padding : 0px;
+
+}

@@ -23,15 +23,8 @@
             font-weight: bold;
          }
      </style> -->
-     <style type="text/css">
-     	.col-sm-10 {
-     		padding:0px;
-     	}
-     	.col-sm-2 {
-     		padding:0px;
-     	}
-     	
-     </style>
+     <link rel="stylesheet" type="text/css" href="./style.css">
+     
 
  </head>
  <body>
@@ -145,7 +138,7 @@
 			<!-- <div id="blocklyDiv" style="position:absolute"></div> -->
 		</div>
 		<div class="col-sm-4 p-0 ml-0">
-			<div class="container p-0 ml-0" style="height:400px;">
+			<div class="container p-0 ml-0" id="rightPanel" style="height:400px;">
 				<div class="container" id="conditionBox" style="height: 400px;display: none;">
 					<div title="Edit your condition:">
 						<table>
@@ -271,8 +264,8 @@
 						</tr>
 					</table>		
 				</div>
-				<div class="container p-0 ml-0" id="setBox" style="height:400px; display:none;">
-					<table class="table table-hover table-sm table-responsive">
+				<div class="container p-0 ml-0" id="setBox" style="height:600px; display:none;">
+					<table class="table table-hover table-sm scrollable1">
 						<thead class="thead-default">
 		 					<tr>
 		 						<th>Available Variables</th>
@@ -284,7 +277,7 @@
 	 					
 	 					</tbody>
 					</table>
-					<table class="table table-hover table-sm table-responsive">
+					<table class="table table-hover table-sm scrollable1">
 	 					<thead class="thead-default">
 		 					<tr>
 		 						<th>Variable</th>
@@ -317,7 +310,7 @@
 			</div>
 			<!-- <div class="container" id="conditionBox" style="display:none"> -->
 			
-			<div class="container" id="xmlBox">
+			<div class="row container" id="xmlBox" style="display: none">
 				<table>
 					<tr>
 						<td id="xmlDisplay">
@@ -325,13 +318,33 @@
 						</td>
 					</tr>
 				</table>
+				<button id="closeXmlBox">close</button>
 			</div>
 		</div>
 
 		<div class="row">
-			<div class="container col-sm-8">
-				<button id="openConfigurationBtn" class="btn btn-success">Edit inputs and outputs</button>
+			<div class="container col-sm-12">
+				<nav class="navbar navbar-light bg-light">
+					<a class="navbar-brand" href="#">
+						<img src="./images/AINSLOGO.PNG" width="30" height="30" alt="">
+						Process Designer
+					</a>
+					<div class="collapse navbar-collapse" id="navbarNav">
+						<ul class="navbar-nav">
+							<li class="nav-item active">
+								<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+							</li>
+						</ul>
+					</div>
+					<button id="openConfigurationBtn" class="ui-button ">Edit inputs and outputs</button>
+					<button id="openXmlBoxBtn" class="ui-button">Save</button>
+					
+				</nav>
+				
+
 			</div>
+			
+			
 		</div>
 
 

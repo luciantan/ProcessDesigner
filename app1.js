@@ -161,14 +161,32 @@ window.onload = function(){
 
 	var AinsXml = (function(){
 		var xml = null;
+		var $xmlBox = $('#xmlBox');
+		var $openXmlBoxBtn = $('#openXmlBoxBtn');
 		var $xmlDisplay = $('#xmlDisplay');
+		var $closeXmlBox = $('#closeXmlBox');
 		var workspace = AinsBlockly.workspace;
 
-		workspace.addChangeListener(function(event){
-			if(event.type == Blockly.Events.MOVE){
-				updateXml();
-			}
-		});
+		// workspace.addChangeListener(function(event){
+		// 	if(event.type == Blockly.Events.MOVE){
+		// 		updateXml();
+		// 	}
+		// });
+
+		$openXmlBoxBtn.on('click',$openXmlBoxBtn,displayXmlHandler);
+
+		function displayXmlHandler(){
+			//$xmlBox.show();
+			$xmlBox.dialog();
+			updateXml();
+		}
+
+		$closeXmlBox.on('click',$closeXmlBox,closeXmlHandler);
+
+		function closeXmlHandler(){
+			$xmlBox.dialog('close');
+		}
+
 
 		function updateXml(){
 			var xmlDom = Blockly.Xml.workspaceToDom(workspace);
