@@ -83,8 +83,9 @@ window.onload = function(){
 		function deleteInputVariableHandler(event){
 			var $tr = $(event.target).closest('tr');
 			//update configuration.input
-			var deletedVal = $tr.find('input').val();
-			delete configuration.input[deletedVal];
+			//var deletedVal = $tr.find('input').val();
+			//delete configuration.input[deletedVal];
+			//setMethod.updateAvailableVariablesList();
 			//update the UI
 			if ($tr.siblings().length !== 0) {
 				$tr.remove();
@@ -105,8 +106,9 @@ window.onload = function(){
 		function deleteOutputVariableHandler(event){
 			var $tr = $(event.target).closest('tr');
 			//update configuration.input
-			var deletedVal = $tr.find('input').val();
-			delete configuration.input[deletedVal];
+			//var deletedVal = $tr.find('input').val();
+			//delete configuration.input[deletedVal];
+			//setMethod.updateAvailableVariablesList();
 			//update the UI
 			if ($tr.siblings().length !== 0) {
 				$tr.remove();
@@ -128,12 +130,13 @@ window.onload = function(){
 		function completeConfigurationHandler(){
 			//Update the configurations and put the processName on the main page
 			configuration.processName = $processNameConfigure.val();
-
+			configuration.input = {};
 			$inputTableBody.find("tr").each(function(rowIndex, c){
 				var variableName = $(this).find('input').val();
 				var dataType = $(this).find('select').val();
 				configuration.input[variableName] = dataType;
 			});
+			configuration.output = {};
 			$outputTableBody.find("tr").each(function(rowIndex, c){
 				var variableName = $(this).find('input').val();
 				var dataType = $(this).find('select').val();
@@ -142,7 +145,7 @@ window.onload = function(){
 			//Update the process name on the top
 			$('#processName').html(configuration.processName);
 			//update the input variables for the setMethod based on the configuration{} object.
-			setMethod.readConfiguration();
+			setMethod.updateAvailableVariablesList();
 			$(this).dialog('close');
 		};
 
@@ -501,6 +504,8 @@ window.onload = function(){
 
 		var $availableVarsList = $('#availableVarsList');
 
+		var $confirmVarBtn = $('#confirmVarBtn');
+
 
 
 		$addVarBtn.on('click', $addVarBtn, addVarBtnHandler);
@@ -553,7 +558,8 @@ window.onload = function(){
 			delete availableVars[deletedVar];
 			delete variables[deletedVar];
 
-			addVariableListToAvailableVarsList();
+			updateAvailableVariablesList();
+
 			if ($tr.siblings().length !== 0) {
 				// console.log($tr.html());
 				$tr.remove();
@@ -563,6 +569,11 @@ window.onload = function(){
 				$tr.remove();
 
 			}
+		};
+
+		$confirmVarBtn.on('click', $confirmVarBtn, confirmVarsBtnHandler);
+		function confirmVarsBtnHandler(){
+			_updateAvailableVarsList();
 		};
 		
 		function readConfiguration(){
@@ -581,6 +592,38 @@ window.onload = function(){
 
 			console.log(availableVars); 
 		};
+
+		//update the availableVarsList to configuration.input
+		function _collectInputVars(){
+			//$availableVarsList.empty();
+			var configuration = processConfiguration.configuration;
+			var inputs = configuration.input;
+
+			//1. put input variables from the configuration to the available variables list
+			//2. update the availableVars{}
+			for (var key in inputs) {
+				if (inputs.hasOwnProperty(key)) {
+					availableVars[key] = inputs[key];
+					$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html(inputs[key])).append($('<td>').html('from input')));
+				}
+			}
+
+		};
+
+		function _collectVariableList(){
+
+			//update availableVars list
+			for (var key in variables) {
+				availableVars[key] = variables[key];
+				$availableVarsList.append($('<tr>').append($('<td>').html(key)).append($('<td>').html("discuss with MH")).append($('<td>').html(variables[key])));
+			}
+		}
+
+		function updateAvailableVariablesList(){
+			$availableVarsList.empty();
+			_collectInputVars();
+			_collectVariableList();
+		}
 
 		function addVariableListToAvailableVarsList() {
 			readConfiguration();
@@ -606,6 +649,7 @@ window.onload = function(){
 
 		return {
 			readConfiguration:readConfiguration,
+			updateAvailableVariablesList:updateAvailableVariablesList,
 		}
 
 	})();
