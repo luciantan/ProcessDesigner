@@ -1,5 +1,5 @@
 window.onload = function(){
-
+	//$.fn.modal.Constructor.prototype.enforceFocus = function() {};
 	var AinsBlockly = (function(){
 		createAinsBlocks();
 		var blocklyArea = document.getElementById('blocklyArea');
@@ -268,6 +268,7 @@ window.onload = function(){
 		var $getFolderBox = $('#getFolderBox');
 		var $setValueBox = $('#setValueBox');
 		var $setBox = $('#setBox');
+		var $sendEmailBox = $('#sendEmailBox');
 
 		workspace.addChangeListener(clickingDoBlockHandler);
 		function clickingDoBlockHandler(event){
@@ -327,6 +328,8 @@ window.onload = function(){
 				openSetValueBox();
 			} else if (selectedOption == 'set') {
 				openSetBox();
+			} else if (selectedOption == 'send email') {
+				openSendEmailBox();
 			};
 		});
 
@@ -347,11 +350,28 @@ window.onload = function(){
 		}
 
 		function openSetBox(){
-			setMethod.readConfiguration();
+			setMethod.updateAvailableVariablesList();
 			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
 				$setBox.show({duration:250, effect:'slide', direction:'right'});
 			},});
 		};
+
+		function openSendEmailBox(){
+			sendEmail.prepareTypeaheadOptions();
+			$invokeBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$sendEmailBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		}
+
+		function getBackToInvokePanel($context){
+			$context.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+			},});
+		}
+
+		return {
+			getBackToInvokePanel:getBackToInvokePanel,
+		}
 
 	})();
 
@@ -372,9 +392,10 @@ window.onload = function(){
 			block.data = JSON.stringify(oData);
 			console.log(block.data);
 			AinsBlockly.setSelectedBlock(block);
-			$getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
-				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
-			},});
+			// $getFolderBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+			// 	$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+			// },});
+			InvokeOptions.getBackToInvokePanel($getFolderBox);
 		};
 
 		function updateGetFolderBox(){
@@ -440,9 +461,10 @@ window.onload = function(){
 
 			console.log(chosedBlock);
 			console.log(ainsVariables);
-			$setValueBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
-				$invokeBox.show({duration:250, effect:'slide', direction:'right'});
-			},});
+			// $setValueBox.hide({duration:250,effect:'slide', direction:'right', complete:function(){
+			// 	$invokeBox.show({duration:250, effect:'slide', direction:'right'});
+			// },});
+			InvokeOptions.getBackToInvokePanel($setValueBox);
 		
 		}
 
@@ -655,20 +677,170 @@ window.onload = function(){
 		function submitVarsBtnHandler(){
 			_updateAvailableVarsList();
 			var data = JSON.stringify(variables);
-			console.log(data);
+			console.log("data:" + data);
 			//update the data in the block:
 			//1. get the current block
-			//2. set the data inside of the block
 			var block = AinsBlockly.getSelectedBlock();
+			//2. set the data inside of the block
 			block.data = data;
 
+			console.log("availableVars:" + JSON.stringify(getAvailableVars()));
+			//close the current panel and return to the "invoke" right panel
+			InvokeOptions.getBackToInvokePanel($setBox);
 
 		};
 
-		return {
-			readConfiguration:readConfiguration,
-			updateAvailableVariablesList:updateAvailableVariablesList,
+		$cancelSubmitVarsBtn.on('click', $cancelSubmitVarsBtn, cancelSubmitVarsBtnHandler);
+		function cancelSubmitVarsBtnHandler(){
+			alert("cancel, is it necessary? should this be replaced with 'clear'?");
+		};
+
+		function getAvailableVars(){
+			return availableVars;
 		}
+
+		return {
+			updateAvailableVariablesList:updateAvailableVariablesList,
+			getAvailableVars:getAvailableVars,
+		}
+
+	})();
+
+	var sendEmail = (function(){
+		var $sendEmailBox = $("#sendEmailBox");
+		var $sendEmailTarget = $("#sendEmailTarget");
+		// var $sendEmailReceiver = $("#sendEmailReceiver");
+		var $sendEmailSender = $("#sendEmailSender");
+		var $sendEmailAttachment = $("#sendEmailAttachment");
+
+		var $sendEmailCc = $("#sendEmailCc");
+		var $sendEmailBtn = $("#sendEmailBtn");
+
+
+		var availableVars = {};
+		var sendEmailTargetList = {};
+		sendEmailTargetList["results"] = [];
+
+		
+		$sendEmailTarget.select2({
+			placeholder: 'Send email to:',
+			// data:sendEmailTargetList,
+		});
+
+		$sendEmailCc.select2({
+			placeholder: 'Cc to:'
+		});
+
+		// $sendEmailReceiver.select2({
+		// 	placeholder: 'Receiver Name'
+		// });
+
+		$sendEmailSender.select2({
+			placeholder: 'Sender Name'
+		});	
+
+		$sendEmailAttachment.select2({
+			placeholder: 'Attachment:'
+		});
+
+		$sendEmailBtn.on('click', $sendEmailBtn, sendEmailBtnHandler);
+
+		function sendEmailBtnHandler(){
+			//prepareTypeaheadOptions();
+			InvokeOptions.getBackToInvokePanel($sendEmailBox);
+		};
+
+		function prepareTypeaheadOptions(){
+			_prepareSendEmailTarget();
+			_prepareSendEmainCc();
+			// _prepareSendEmainReceiver();
+			_prepareSendEmainSender();
+			_prepareSendEmainAttachment();
+		}
+
+		function _prepareSendEmailTarget(){
+			availableVars = setMethod.getAvailableVars();
+			$sendEmailTarget.empty();
+			var index = 1;
+			$.each(availableVars, function(variableName, typeOrValue) {
+				console.log(variableName);
+				var option = new Option(variableName, index);
+				$sendEmailTarget.append(option);
+				index++;
+			});
+		}
+
+		function _prepareSendEmainCc(){
+			availableVars = setMethod.getAvailableVars();
+			$sendEmailCc.empty();
+			var index = 1;
+			$.each(availableVars, function(variableName, typeOrValue) {
+				console.log(variableName);
+				var option = new Option(variableName, index);
+				$sendEmailCc.append(option);
+				index++;
+			});
+		}
+
+		// function _prepareSendEmainReceiver(){
+		// 	availableVars = setMethod.getAvailableVars();
+		// 	$sendEmailReceiver.empty();
+		// 	var index = 1;
+		// 	$.each(availableVars, function(variableName, typeOrValue) {
+		// 		console.log(variableName);
+		// 		var option = new Option(variableName, index);
+		// 		$sendEmailReceiver.append(option);
+		// 		index++;
+		// 	});
+		// }
+
+		function _prepareSendEmainSender(){
+			availableVars = setMethod.getAvailableVars();
+			$sendEmailSender.empty();
+			var index = 1;
+			$.each(availableVars, function(variableName, typeOrValue) {
+				console.log(variableName);
+				var option = new Option(variableName, index);
+				$sendEmailSender.append(option);
+				index++;
+			});
+		}
+
+		function _prepareSendEmainAttachment(){
+			availableVars = setMethod.getAvailableVars();
+			$sendEmailAttachment.empty();
+			var index = 1;
+			$.each(availableVars, function(variableName, typeOrValue) {
+				console.log(variableName);
+				var option = new Option(variableName, index);
+				$sendEmailAttachment.append(option);
+				index++;
+			});
+		}
+
+
+		return {
+			prepareTypeaheadOptions : prepareTypeaheadOptions,
+		}
+		//Commenting a way to produce the required data for Select2 by program
+		// function _prepareTypeaheadList() {
+		// 	_addAvailableVarsToTypeaheadList();
+		// 	_addConfigurationToTypeaheadList();
+		// }
+
+		// function _addAvailableVarsToTypeaheadList() {
+		// 	availableVars = setMethod.getAvailableVars();
+		// 	sendEmailTangetList = {};
+		// 	sendEmailTangetList["results"] = [];
+		// 	var index = 1;
+		// 	$.each(availableVars, function(variableName, typeOrValue) {
+		// 		sendEmailTangetList.results.push({"id": index, "text" : variableName});
+		// 		index++;
+		// 	});
+		// }
+		// function _addConfigurationToTypeaheadList() {
+		// 	sendEmailTangetList["pagination"] = {"more" : true};
+		// }
 
 	})();
 

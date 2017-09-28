@@ -26,6 +26,7 @@ function createAinsBlocks(){
 		function dynamicOptions() {
 			var options = [];
       options.push(['set','set']);
+      options.push(['send email','send email']);
 			options.push(['getFolder()','getFolder()']);
 			options.push(['setValue()','setValue()']);
 			// var now = Date.now();

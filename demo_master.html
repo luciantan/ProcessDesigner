@@ -23,7 +23,9 @@
             font-weight: bold;
          }
      </style> -->
-     <link rel="stylesheet" type="text/css" href="./style.css">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
      
 
  </head>
@@ -64,7 +66,7 @@
 	 					</thead>
 	 					<tbody id="inputTableBody">
 		 					<tr id="inputTableSeed">
-		 						<th scope="row">1</th>
+		 						<th scope="row"><span class="number">1</span></th>
 		 						<td>
 		 							<input type="text" name="inputVariable" placeholder="e.g. x">
 		 						</td>
@@ -102,7 +104,7 @@
 	 					</thead>
 	 					<tbody id="outputTableBody">
 		 					<tr id="outputTableSeed">
-		 						<th scope="row">1</th>
+		 						<th scope="row"><span class="number">1</span></th>
 		 						<td>
 		 							<input type="text" name="inputVariable" placeholder="e.g. x">
 		 						</td>
@@ -265,6 +267,15 @@
 					</table>		
 				</div>
 				<div class="container p-0 ml-0" id="setBox" style="height:600px; display:none;">
+					<div class="row">
+						<div class="col-sm-7"></div>
+						<div class="col-sm-5">
+							<h5>
+								Set Variables
+							</h5>
+						</div>
+						<hr>	
+					</div>
 					<table class="table table-hover table-sm scrollable1">
 						<thead class="thead-default">
 		 					<tr>
@@ -307,6 +318,53 @@
 	 				<button type="button" class="btn btn-primary" id="submitVarsBtn">Submit</button>
 	 				<button type="button" class="btn btn-warning" id="cancelSubmitVarsBtn">Cancel</button>
 				</div>
+				<div div class="container p-0 ml-0" id="sendEmailBox" style="height:600px;">
+					<div class="row">
+						<div class="col-sm-7"></div>
+						<div class="col-sm-5">
+							<h5>
+								Send Email
+							</h5>
+						</div>
+						<hr>
+						
+					</div>
+					<div class="container">
+						<div class="row">
+							<div class="col-sm-10">
+								<label for="sendEmailTarget">To:</label>
+								<select class="form-control" id="sendEmailTarget" multiple="multiple">
+								</select>
+								<label for="sendEmailCc">Cc:</label>
+								<select class="form-control" id="sendEmailCc" multiple="multiple">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-10">
+								<div class="form-group">
+									<label for="sendEmailContent">Message:</label>
+									<textarea class="form-control" rows="5" id="sendEmailContent"></textarea>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-10">
+								<label for="sendEmailSender">Sender Name</label>
+								<select class="form-control" id="sendEmailSender" multiple="multiple">
+								</select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-10">
+								<label for="sendEmailAttachment">Select Attachment:</label>
+								<select class="form-control" id="sendEmailAttachment" multiple="multiple"></select>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<button class="btn btn-success" id="sendEmailBtn">OK</button>
+				</div>
 			</div>
 			<!-- <div class="container" id="conditionBox" style="display:none"> -->
 			
@@ -323,7 +381,7 @@
 		</div>
 
 		<div class="row">
-			<div class="container col-sm-12">
+			<div class="container-fluid col-sm-12">
 				<nav class="navbar navbar-light bg-light">
 					<a class="navbar-brand" href="#">
 						<img src="./images/AINSLOGO.PNG" width="30" height="30" alt="">
