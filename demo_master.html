@@ -318,7 +318,8 @@
 	 				<button type="button" class="btn btn-primary" id="submitVarsBtn">Submit</button>
 	 				<button type="button" class="btn btn-warning" id="cancelSubmitVarsBtn">Cancel</button>
 				</div>
-				<div div class="container p-0 ml-0" id="sendEmailBox" style="height:600px;">
+				<!-- <div div class="container p-0 ml-0" id="sendEmailBox" style="height:600px; display: none"> -->
+				<div div class="container p-0 ml-0" id="sendEmailBox" style="height:600px; display:none">
 					<div class="row">
 						<div class="col-sm-7"></div>
 						<div class="col-sm-5">
@@ -330,11 +331,23 @@
 						
 					</div>
 					<div class="container">
+
+						<div class="row">
+							<div class="col-sm-10">
+								<label for="sendEmailSender">From:</label>
+								<select class="form-control" id="sendEmailSender" multiple="multiple">
+								</select>
+							</div>
+						</div>
+
 						<div class="row">
 							<div class="col-sm-10">
 								<label for="sendEmailTarget">To:</label>
-								<select class="form-control" id="sendEmailTarget" multiple="multiple">
-								</select>
+								<select class="form-control" id="sendEmailTarget" multiple="multiple"></select>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-sm-10">
 								<label for="sendEmailCc">Cc:</label>
 								<select class="form-control" id="sendEmailCc" multiple="multiple">
 								</select>
@@ -348,13 +361,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-sm-10">
-								<label for="sendEmailSender">Sender Name</label>
-								<select class="form-control" id="sendEmailSender" multiple="multiple">
-								</select>
-							</div>
-						</div>
+					
 						<div class="row">
 							<div class="col-sm-10">
 								<label for="sendEmailAttachment">Select Attachment:</label>
@@ -364,6 +371,7 @@
 					</div>
 					<hr>
 					<button class="btn btn-success" id="sendEmailBtn">OK</button>
+					<button class="btn btn-success" id="sendEmailTestBtn">Test</button>
 				</div>
 			</div>
 			<!-- <div class="container" id="conditionBox" style="display:none"> -->

@@ -708,27 +708,33 @@ window.onload = function(){
 
 	var sendEmail = (function(){
 		var $sendEmailBox = $("#sendEmailBox");
+		//$sendEmailBox.hide();
 		var $sendEmailTarget = $("#sendEmailTarget");
 		// var $sendEmailReceiver = $("#sendEmailReceiver");
 		var $sendEmailSender = $("#sendEmailSender");
 		var $sendEmailAttachment = $("#sendEmailAttachment");
 
 		var $sendEmailCc = $("#sendEmailCc");
+		var $sendEmailContent = $("#sendEmailContent");
+
 		var $sendEmailBtn = $("#sendEmailBtn");
 
-
 		var availableVars = {};
-		var sendEmailTargetList = {};
-		sendEmailTargetList["results"] = [];
+
+		// var sendEmailTargetList = {};
+		// sendEmailTargetList["results"] = [];
 
 		
+		//var $dropDownParent = $("#dropDownParent");
+
 		$sendEmailTarget.select2({
-			placeholder: 'Send email to:',
-			// data:sendEmailTargetList,
+			placeholder : 'Send email to:',
+			width : '100%',
 		});
 
 		$sendEmailCc.select2({
-			placeholder: 'Cc to:'
+			placeholder: 'Cc to:',
+			width : '100%',
 		});
 
 		// $sendEmailReceiver.select2({
@@ -736,17 +742,20 @@ window.onload = function(){
 		// });
 
 		$sendEmailSender.select2({
-			placeholder: 'Sender Name'
+			placeholder: 'Sender Name',
+			width : '100%',
 		});	
 
 		$sendEmailAttachment.select2({
-			placeholder: 'Attachment:'
+			placeholder: 'Attachment:',
+			width : '100%',
 		});
 
 		$sendEmailBtn.on('click', $sendEmailBtn, sendEmailBtnHandler);
 
 		function sendEmailBtnHandler(){
 			//prepareTypeaheadOptions();
+			addDataToBlock();
 			InvokeOptions.getBackToInvokePanel($sendEmailBox);
 		};
 
@@ -756,6 +765,7 @@ window.onload = function(){
 			// _prepareSendEmainReceiver();
 			_prepareSendEmainSender();
 			_prepareSendEmainAttachment();
+			//$sendEmailTarget.addClass("form-control");
 		}
 
 		function _prepareSendEmailTarget(){
@@ -763,7 +773,6 @@ window.onload = function(){
 			$sendEmailTarget.empty();
 			var index = 1;
 			$.each(availableVars, function(variableName, typeOrValue) {
-				console.log(variableName);
 				var option = new Option(variableName, index);
 				$sendEmailTarget.append(option);
 				index++;
@@ -775,7 +784,6 @@ window.onload = function(){
 			$sendEmailCc.empty();
 			var index = 1;
 			$.each(availableVars, function(variableName, typeOrValue) {
-				console.log(variableName);
 				var option = new Option(variableName, index);
 				$sendEmailCc.append(option);
 				index++;
@@ -799,7 +807,6 @@ window.onload = function(){
 			$sendEmailSender.empty();
 			var index = 1;
 			$.each(availableVars, function(variableName, typeOrValue) {
-				console.log(variableName);
 				var option = new Option(variableName, index);
 				$sendEmailSender.append(option);
 				index++;
@@ -811,11 +818,57 @@ window.onload = function(){
 			$sendEmailAttachment.empty();
 			var index = 1;
 			$.each(availableVars, function(variableName, typeOrValue) {
-				console.log(variableName);
 				var option = new Option(variableName, index);
 				$sendEmailAttachment.append(option);
 				index++;
 			});
+		}
+
+		var $sendEmailTestBtn = $("#sendEmailTestBtn");
+		$sendEmailTestBtn.on('click', $sendEmailTestBtn, function(){
+			addDataToBlock();
+		});
+
+		function addDataToBlock() {
+			var data = {};
+			data.from = "";
+			data.to = "";
+			data.cc = "";
+			data.message = "";
+			data.attachment = "";
+			// var selectedInTarget = $sendEmailTarget.select2('data');
+			var selectedInFrom = $sendEmailSender.select2('data');
+			for (let i = 0; i < selectedInFrom.length; i++) {
+				data.from += selectedInFrom[i].text;
+				data.from += ",";
+			}
+
+			var selectedInTo = $sendEmailTarget.select2('data');
+			for (let i = 0; i < selectedInTo.length; i++) {
+				data.to += selectedInTo[i].text;
+				data.to += ",";
+			}
+
+			var selectedInCc = $sendEmailCc.select2('data');
+			for (let i = 0; i < selectedInCc.length; i++) {
+				data.cc += selectedInCc[i].text;
+				data.cc += ",";
+			}
+
+			var userTypedMessage = $sendEmailContent.val();
+			data.message = userTypedMessage;
+
+			var selectedInAttachment = $sendEmailAttachment.select2('data');
+			for (let i = 0; i < selectedInAttachment.length; i++) {
+				data.attachment += selectedInAttachment[i].text;
+				data.attachment += ",";
+			}
+
+
+			var sData = JSON.stringify(data);
+			var block = AinsBlockly.getSelectedBlock();
+			block.data = sData;
+			
 		}
 
 
