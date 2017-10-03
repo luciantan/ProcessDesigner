@@ -710,7 +710,6 @@ window.onload = function(){
 		var $sendEmailBox = $("#sendEmailBox");
 		//$sendEmailBox.hide();
 		var $sendEmailTarget = $("#sendEmailTarget");
-		// var $sendEmailReceiver = $("#sendEmailReceiver");
 		var $sendEmailSender = $("#sendEmailSender");
 		var $sendEmailAttachment = $("#sendEmailAttachment");
 
@@ -727,106 +726,154 @@ window.onload = function(){
 		
 		//var $dropDownParent = $("#dropDownParent");
 
-		$sendEmailTarget.select2({
-			placeholder : 'Send email to:',
-			width : '100%',
-		});
+		
 
-		$sendEmailCc.select2({
-			placeholder: 'Cc to:',
-			width : '100%',
-		});
-
-		// $sendEmailReceiver.select2({
-		// 	placeholder: 'Receiver Name'
+		// $sendEmailCc.select2({
+		// 	placeholder: 'Cc to:',
+		// 	width : '100%',
 		// });
 
-		$sendEmailSender.select2({
-			placeholder: 'Sender Name',
-			width : '100%',
-		});	
+		// // $sendEmailReceiver.select2({
+		// // 	placeholder: 'Receiver Name'
+		// // });
 
-		$sendEmailAttachment.select2({
-			placeholder: 'Attachment:',
-			width : '100%',
-		});
+		// $sendEmailSender.select2({
+		// 	placeholder: 'Sender Name',
+		// 	width : '100%',
+		// });	
+
+		// $sendEmailAttachment.select2({
+		// 	placeholder: 'Attachment:',
+		// 	width : '100%',
+		// });
 
 		$sendEmailBtn.on('click', $sendEmailBtn, sendEmailBtnHandler);
 
 		function sendEmailBtnHandler(){
-			//prepareTypeaheadOptions();
-			addDataToBlock();
+
+			//addDataToBlock();
+
+			addXMLDataToBlock();
+
 			InvokeOptions.getBackToInvokePanel($sendEmailBox);
+
 		};
 
 		function prepareTypeaheadOptions(){
-			_prepareSendEmailTarget();
-			_prepareSendEmainCc();
-			// _prepareSendEmainReceiver();
-			_prepareSendEmainSender();
-			_prepareSendEmainAttachment();
-			//$sendEmailTarget.addClass("form-control");
+
+			_putAvailableVarsToOptions();
+
+			// //separating these four functions because I may add further constrains to each one. 
+			// _prepareSendEmailTarget();
+			// _prepareSendEmainCc();
+			// _prepareSendEmainSender();
+			// _prepareSendEmainAttachment();
+
+			_transferSelectToSelect2();
 		}
 
-		function _prepareSendEmailTarget(){
+		var $optionsSeed = $("<select>", {class:"form-control", multiple:"multiple"});
+
+		function _putAvailableVarsToOptions() {
+			$optionsSeed.empty();
 			availableVars = setMethod.getAvailableVars();
-			$sendEmailTarget.empty();
 			var index = 1;
 			$.each(availableVars, function(variableName, typeOrValue) {
 				var option = new Option(variableName, index);
-				$sendEmailTarget.append(option);
+				$optionsSeed.append(option);
 				index++;
 			});
 		}
 
-		function _prepareSendEmainCc(){
-			availableVars = setMethod.getAvailableVars();
-			$sendEmailCc.empty();
-			var index = 1;
-			$.each(availableVars, function(variableName, typeOrValue) {
-				var option = new Option(variableName, index);
-				$sendEmailCc.append(option);
-				index++;
+		function _transferSelectToSelect2() {
+
+			$sendEmailTarget.empty().append($optionsSeed.clone());
+			$sendEmailCc.empty().append($optionsSeed.clone());
+			$sendEmailSender.empty().append($optionsSeed.clone());
+			$sendEmailAttachment.empty().append($optionsSeed.clone());
+
+			var waitingList = [$sendEmailTarget, $sendEmailCc, $sendEmailSender, $sendEmailAttachment];
+			$.each(waitingList, function(index, value){
+				value.find('select').select2({
+					placeholder : value.find("label").html(),
+					width : '100%',
+				});
 			});
 		}
 
-		// function _prepareSendEmainReceiver(){
-		// 	availableVars = setMethod.getAvailableVars();
-		// 	$sendEmailReceiver.empty();
-		// 	var index = 1;
-		// 	$.each(availableVars, function(variableName, typeOrValue) {
-		// 		console.log(variableName);
-		// 		var option = new Option(variableName, index);
-		// 		$sendEmailReceiver.append(option);
-		// 		index++;
-		// 	});
+		// function _prepareSendEmailTarget(){
+		// 	// availableVars = setMethod.getAvailableVars();
+		// 	// $sendEmailTarget.empty();
+		// 	// var index = 1;
+		// 	// $.each(availableVars, function(variableName, typeOrValue) {
+		// 	// 	var option = new Option(variableName, index);
+		// 	// 	$sendEmailTarget.append(option);
+		// 	// 	index++;
+		// 	// });
+
+		// 	$sendEmailTarget.append($optionsSeed.clone());
+		// 	// $sendEmailTarget.find('select').select2({
+		// 	// 	placeholder : 'Send email to:',
+		// 	// 	width : '100%',
+		// 	// });
 		// }
 
-		function _prepareSendEmainSender(){
-			availableVars = setMethod.getAvailableVars();
-			$sendEmailSender.empty();
-			var index = 1;
-			$.each(availableVars, function(variableName, typeOrValue) {
-				var option = new Option(variableName, index);
-				$sendEmailSender.append(option);
-				index++;
-			});
-		}
+		// function _prepareSendEmainCc(){
+		// 	// availableVars = setMethod.getAvailableVars();
+		// 	// $sendEmailCc.empty();
+		// 	// var index = 1;
+		// 	// $.each(availableVars, function(variableName, typeOrValue) {
+		// 	// 	var option = new Option(variableName, index);
+		// 	// 	$sendEmailCc.append(option);
+		// 	// 	index++;
+		// 	// });
 
-		function _prepareSendEmainAttachment(){
-			availableVars = setMethod.getAvailableVars();
-			$sendEmailAttachment.empty();
-			var index = 1;
-			$.each(availableVars, function(variableName, typeOrValue) {
-				var option = new Option(variableName, index);
-				$sendEmailAttachment.append(option);
-				index++;
-			});
-		}
+		// 	$sendEmailCc.append($optionsSeed.clone());
+		// 	// $sendEmailCc.find('select').select2({
+		// 	// 	placeholder : 'Send email to:',
+		// 	// 	width : '100%',
+		// 	// });
+		// }
+
+		// function _prepareSendEmainSender(){
+		// 	// availableVars = setMethod.getAvailableVars();
+		// 	// $sendEmailSender.empty();
+		// 	// var index = 1;
+		// 	// $.each(availableVars, function(variableName, typeOrValue) {
+		// 	// 	var option = new Option(variableName, index);
+		// 	// 	$sendEmailSender.append(option);
+		// 	// 	index++;
+		// 	// });
+
+		// 	$sendEmailSender.append($optionsSeed.clone());
+		// 	// $sendEmailSender.find('select').select2({
+		// 	// 	placeholder : 'Send email to:',
+		// 	// 	width : '100%',
+		// 	// });
+
+		// }
+
+		// function _prepareSendEmainAttachment(){
+		// 	// availableVars = setMethod.getAvailableVars();
+		// 	// $sendEmailAttachment.empty();
+		// 	// var index = 1;
+		// 	// $.each(availableVars, function(variableName, typeOrValue) {
+		// 	// 	var option = new Option(variableName, index);
+		// 	// 	$sendEmailAttachment.append(option);
+		// 	// 	index++;
+		// 	// });
+
+		// 	$sendEmailAttachment.append($optionsSeed.clone());
+		// 	// $sendEmailAttachment.find('select').select2({
+		// 	// 	placeholder : 'Send email to:',
+		// 	// 	width : '100%',
+		// 	// });
+		// }
 
 		var $sendEmailTestBtn = $("#sendEmailTestBtn");
 		$sendEmailTestBtn.on('click', $sendEmailTestBtn, function(){
-			addDataToBlock();
+			//addDataToBlock();
+			addXMLDataToBlock();
 		});
 
 		function addDataToBlock() {
@@ -837,19 +884,19 @@ window.onload = function(){
 			data.message = "";
 			data.attachment = "";
 			// var selectedInTarget = $sendEmailTarget.select2('data');
-			var selectedInFrom = $sendEmailSender.select2('data');
+			var selectedInFrom = $sendEmailSender.find('select').select2('data');
 			for (let i = 0; i < selectedInFrom.length; i++) {
 				data.from += selectedInFrom[i].text;
 				data.from += ",";
 			}
 
-			var selectedInTo = $sendEmailTarget.select2('data');
+			var selectedInTo = $sendEmailTarget.find('select').select2('data');
 			for (let i = 0; i < selectedInTo.length; i++) {
 				data.to += selectedInTo[i].text;
 				data.to += ",";
 			}
 
-			var selectedInCc = $sendEmailCc.select2('data');
+			var selectedInCc = $sendEmailCc.find('select').select2('data');
 			for (let i = 0; i < selectedInCc.length; i++) {
 				data.cc += selectedInCc[i].text;
 				data.cc += ",";
@@ -858,7 +905,7 @@ window.onload = function(){
 			var userTypedMessage = $sendEmailContent.val();
 			data.message = userTypedMessage;
 
-			var selectedInAttachment = $sendEmailAttachment.select2('data');
+			var selectedInAttachment = $sendEmailAttachment.find('select').select2('data');
 			for (let i = 0; i < selectedInAttachment.length; i++) {
 				data.attachment += selectedInAttachment[i].text;
 				data.attachment += ",";
@@ -871,10 +918,101 @@ window.onload = function(){
 			
 		}
 
+		$getXmlFromBlockBtn = $("#getXmlFromBlockBtn");
+		$getXmlFromBlockBtn.on('click', $getXmlFromBlockBtn, getXmlFromBlockHandler);
+
+		function getXmlFromBlockHandler(){
+			// var block = AinsBlockly.getSelectedBlock();
+			// var text = block.data;
+			// console.log(text);
+			var workspace = AinsBlockly.workspace;
+			var xmlDom = Blockly.Xml.workspaceToDom(workspace);
+			var xmlText = Blockly.Xml.domToText(xmlDom);
+			var xmlPrettyText = Blockly.Xml.domToPrettyText(xmlDom);
+			xml = xmlPrettyText;
+
+			console.log(xmlText);
+
+			var parser = new DOMParser();
+			xmlDoc = parser.parseFromString(xmlText, "text/xml");
+			console.log(xmlDoc);
+			var data = xmlDoc.getElementsByTagName("data")[0].childNodes[0].nodeValue;
+			var dataDoc = parser.parseFromString(data, "text/xml");
+			console.log(dataDoc);
+
+		}
+
+		function addXMLDataToBlock(){
+		
+			var parser = new DOMParser();
+			var xmlDoc = parser.parseFromString("<EmailConfiguration></EmailConfiguration>", "text/xml");
+			var from = xmlDoc.createElement("from");
+			var to = xmlDoc.createElement("to");
+			var cc = xmlDoc.createElement("cc");
+			var message = xmlDoc.createElement("message");
+			var attachment = xmlDoc.createElement("attachment");
+
+			var elements = xmlDoc.getElementsByTagName("EmailConfiguration");
+			elements[0].appendChild(from);
+			elements[0].appendChild(to);
+			elements[0].appendChild(cc);
+			elements[0].appendChild(message);
+			elements[0].appendChild(attachment);
+
+			//var fromText = '', toText = '', ccText = '', messageText = '', attachentText = '';
+
+			var selectedInFrom = $sendEmailSender.find('select').select2('data');
+			for (let i = 0; i < selectedInFrom.length; i++) {
+				let newNode = xmlDoc.createElement(selectedInFrom[i].text)
+				let newText = xmlDoc.createTextNode(selectedInFrom[i].text);
+				xmlDoc.getElementsByTagName("from")[0].appendChild(newNode);
+				xmlDoc.getElementsByTagName("from")[0].getElementsByTagName(selectedInFrom[i].text)[0].appendChild(newText);
+			}
+
+			var selectedInTo = $sendEmailTarget.find('select').select2('data');
+			for (let i = 0; i < selectedInTo.length; i++) {
+				let newNode = xmlDoc.createElement(selectedInTo[i].text)
+				let newText = xmlDoc.createTextNode(selectedInTo[i].text);
+				xmlDoc.getElementsByTagName("to")[0].appendChild(newNode);
+				//
+				xmlDoc.getElementsByTagName("to")[0].getElementsByTagName(selectedInTo[i].text)[0].appendChild(newText);
+			}
+
+			var selectedInCc = $sendEmailCc.find('select').select2('data');
+			for (let i = 0; i < selectedInCc.length; i++) {
+				let newNode = xmlDoc.createElement(selectedInCc[i].text)
+				let newText = xmlDoc.createTextNode(selectedInCc[i].text);
+				xmlDoc.getElementsByTagName("cc")[0].appendChild(newNode);
+				xmlDoc.getElementsByTagName("cc")[0].getElementsByTagName(selectedInCc[i].text)[0].appendChild(newText);
+			}
+
+			var userTypedMessage = $sendEmailContent.val();
+			var newText = xmlDoc.createTextNode(userTypedMessage);
+			xmlDoc.getElementsByTagName("message")[0].appendChild(newText);
+
+			var selectedInAttachment = $sendEmailAttachment.find('select').select2('data');
+			for (let i = 0; i < selectedInAttachment.length; i++) {
+				let newNode = xmlDoc.createElement(selectedInAttachment[i].text)
+				let newText = xmlDoc.createTextNode(selectedInAttachment[i].text);
+				xmlDoc.getElementsByTagName("attachment")[0].appendChild(newNode);
+				xmlDoc.getElementsByTagName("attachment")[0].getElementsByTagName(selectedInAttachment[i].text)[0].appendChild(newText);
+			}
+
+			//Transform the xmlDoc to string
+			var serializer = new XMLSerializer();
+			var xmlString = serializer.serializeToString(xmlDoc);
+
+			//save xml string to block
+			var block = AinsBlockly.getSelectedBlock();
+			block.data = xmlString;
+
+		}
+
 
 		return {
 			prepareTypeaheadOptions : prepareTypeaheadOptions,
 		}
+
 		//Commenting a way to produce the required data for Select2 by program
 		// function _prepareTypeaheadList() {
 		// 	_addAvailableVarsToTypeaheadList();

@@ -333,24 +333,26 @@
 					<div class="container">
 
 						<div class="row">
-							<div class="col-sm-10">
-								<label for="sendEmailSender">From:</label>
-								<select class="form-control" id="sendEmailSender" multiple="multiple">
-								</select>
+							<div class="col-sm-10" id="sendEmailSender">
+								<!-- <label for="sendEmailSender">From:</label> -->
+								<label>From:</label>
+								<!-- <select class="form-control"  multiple="multiple">
+								</select> -->
 							</div>
 						</div>
 
 						<div class="row">
-							<div class="col-sm-10">
-								<label for="sendEmailTarget">To:</label>
-								<select class="form-control" id="sendEmailTarget" multiple="multiple"></select>
+							<div class="col-sm-10" id="sendEmailTarget">
+								<!-- <label for="optionsSeed">To:</label> -->
+								<label>To:</label>
+								<!-- <select class="form-control" id="optionsSeed" multiple="multiple"></select> -->
 							</div>
 						</div>
 						<div class="row">
-							<div class="col-sm-10">
+							<div class="col-sm-10" id="sendEmailCc">
 								<label for="sendEmailCc">Cc:</label>
-								<select class="form-control" id="sendEmailCc" multiple="multiple">
-								</select>
+								<!-- <select class="form-control"  multiple="multiple">
+								</select> -->
 							</div>
 						</div>
 						<div class="row">
@@ -363,15 +365,16 @@
 						</div>
 					
 						<div class="row">
-							<div class="col-sm-10">
+							<div class="col-sm-10" id="sendEmailAttachment">
 								<label for="sendEmailAttachment">Select Attachment:</label>
-								<select class="form-control" id="sendEmailAttachment" multiple="multiple"></select>
+								<!-- <select class="form-control"  multiple="multiple"></select> -->
 							</div>
 						</div>
 					</div>
 					<hr>
 					<button class="btn btn-success" id="sendEmailBtn">OK</button>
 					<button class="btn btn-success" id="sendEmailTestBtn">Test</button>
+					<button class="btn btn-success" id="getXmlFromBlockBtn">Get xml from block</button>
 				</div>
 			</div>
 			<!-- <div class="container" id="conditionBox" style="display:none"> -->
