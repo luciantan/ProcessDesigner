@@ -787,10 +787,10 @@ window.onload = function(){
 
 		function _transferSelectToSelect2() {
 
-			$sendEmailTarget.empty().append($optionsSeed.clone());
-			$sendEmailCc.empty().append($optionsSeed.clone());
-			$sendEmailSender.empty().append($optionsSeed.clone());
-			$sendEmailAttachment.empty().append($optionsSeed.clone());
+			$sendEmailTarget.empty().append($("<label/>").text("To:")).append($optionsSeed.clone());
+			$sendEmailCc.empty().append($("<label/>").text("Cc:")).append($optionsSeed.clone());
+			$sendEmailSender.empty().append($("<label/>").text("From:")).append($optionsSeed.clone());
+			$sendEmailAttachment.empty().append($("<label/>").text("Attachment:")).append($optionsSeed.clone());
 
 			var waitingList = [$sendEmailTarget, $sendEmailCc, $sendEmailSender, $sendEmailAttachment];
 			$.each(waitingList, function(index, value){
