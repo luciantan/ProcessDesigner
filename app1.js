@@ -281,6 +281,8 @@ window.onload = function(){
 						$getFolderBox.hide({duration:250,effect:'slide', direction:'right'});
 						$setValueBox.hide({duration:250,effect:'slide', direction:'right'});
 						$invokeBox.hide({duration:250, effect:'slide', direction:'right'});
+						$setBox.hide({duration:250, effect:'slide', direction:'right'});
+						$sendEmailBox.hide({duration:250, effect:'slide', direction:'right'});
 						$invokeBox.show({duration:250, effect:'slide', direction:'right'});
 					},});
 					var field = block.getField('options');
