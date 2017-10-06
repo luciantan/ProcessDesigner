@@ -252,9 +252,13 @@ window.onload = function(){
 			var newComment = $newComment.val();
 			commentField.setText('//'+newComment);
 			$previousComment.html(newComment);
-			block.data = newComment;
+			block.commentMessage = newComment;
 			AinsXml.updateXml();
 		};
+	})();
+
+	var editComment = (function(){
+
 	})();
 
 	var InvokeOptions = (function(){
@@ -262,13 +266,14 @@ window.onload = function(){
 		var workspace = AinsBlockly.workspace;
 		var $invokeBox = $('#invokeBox');
 		var $currentOption = $('#currentOption');
-		var $optionsList = $('#options');
+		var $optionsList = $('#invokeOptions');
 		var $optionBtn = $('#changeOptionBtn');
 		var $conditionBox = $('#conditionBox');
 		var $getFolderBox = $('#getFolderBox');
 		var $setValueBox = $('#setValueBox');
 		var $setBox = $('#setBox');
 		var $sendEmailBox = $('#sendEmailBox');
+		var $blockComments = $('#blockComments');
 
 		workspace.addChangeListener(clickingDoBlockHandler);
 		function clickingDoBlockHandler(event){
@@ -302,6 +307,15 @@ window.onload = function(){
 			}
 		};
 
+		$blockComments.on('change', $blockComments, changeCommentsHandler);
+		function changeCommentsHandler() {
+			var block = AinsBlockly.getSelectedBlock();
+			var field = block.getField('comments');
+			var newComment = $blockComments.val();
+			field.setText("//" + newComment);
+			block.commentMessage = newComment;
+		};
+
 		$optionsList.on('change', $optionsList, changeOptionListHandler);
 		function changeOptionListHandler(){
 			var option = $optionsList.val();
@@ -317,6 +331,13 @@ window.onload = function(){
 		// 	var variable = $selectVariables.val();
 		// 	updateProperties_(variable);
 		// }
+
+		$optionsList.select2({
+			placeholder:"selct a function",
+			width: "60%",
+		});
+
+
 
 		$optionBtn.on('click', $optionBtn, function(){
 			var block = AinsBlockly.getSelectedBlock();
@@ -678,19 +699,48 @@ window.onload = function(){
 		$submitVarsBtn.on('click', $submitVarsBtn, submitVarsBtnHandler);
 		function submitVarsBtnHandler(){
 			_updateAvailableVarsList();
+
+
 			var data = JSON.stringify(variables);
 			console.log("data:" + data);
-			//update the data in the block:
-			//1. get the current block
-			var block = AinsBlockly.getSelectedBlock();
-			//2. set the data inside of the block
-			block.data = data;
+
+			addXmlToBlockData();
 
 			console.log("availableVars:" + JSON.stringify(getAvailableVars()));
 			//close the current panel and return to the "invoke" right panel
 			InvokeOptions.getBackToInvokePanel($setBox);
 
 		};
+
+		function addXmlToBlockData() {
+
+			var parser = new DOMParser();
+			var xmlDoc = parser.parseFromString("<setedVariables></setedVariables>", "text/xml");
+			var rootElement = xmlDoc.getElementsByTagName("setedVariables")[0];
+
+			for (var prop in variables) {
+				if (!variables.hasOwnProperty(prop)) {
+					continue;
+				}
+				if (variables[prop] == undefined) {
+					continue;
+				}
+				var newNode = xmlDoc.createElement(prop);
+				var newText = xmlDoc.createTextNode(variables[prop]);
+				newNode.appendChild(newText);
+				rootElement.appendChild(newNode);
+			}
+
+			//Transform the xmlDoc to string
+			var serializer = new XMLSerializer();
+			var xmlString = serializer.serializeToString(xmlDoc);
+
+			//save xml string to block
+			var block = AinsBlockly.getSelectedBlock();
+			block.data = xmlString;
+			console.log(block.data);
+
+		}
 
 		$cancelSubmitVarsBtn.on('click', $cancelSubmitVarsBtn, cancelSubmitVarsBtnHandler);
 		function cancelSubmitVarsBtnHandler(){

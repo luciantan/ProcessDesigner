@@ -16,7 +16,7 @@ function createAinsBlocks(){
      this.setTooltip("");
      this.setHelpUrl("");
      this.setEditable(false);
-     this.data = 'AinsIf';
+     this.commentMessage = '//comments';
     }
   };
 
@@ -40,15 +40,17 @@ function createAinsBlocks(){
 		//input.appendField(dropdown, 'DATE');
 
 	    this.appendDummyInput()
-	        .appendField("Do:").appendField(dropdown,'options');
+	        .appendField("Do:").appendField(dropdown,'options')
+          .appendField('//comments','comments');
 	        //.appendField(new Blockly.FieldDropdown([["option1","option1"], ["option2","option2"], ["option3","option3"]]), "options");
 	    this.setInputsInline(false);
 	    this.setPreviousStatement(true, null);
 	    this.setNextStatement(true, null);
 	 this.setTooltip("");
 	 this.setHelpUrl("");
-	 this.setColour('#ec9c13');
-	 this.data = 'ainsDo';
+   //this.setColour('#ec9c13');
+	 this.setColour('#4280d7');
+	 this.commentMessage = '//comments';
 	  }
 	};
 
@@ -65,10 +67,11 @@ function createAinsBlocks(){
       this.setInputsInline(false);
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
-      this.setColour('#4280d7');
+      // this.setColour('#4280d7');
+      this.setColour('#ec9c13');
    this.setTooltip("");
    this.setHelpUrl("");
-   this.data = 'ainsWhile';
+   this.commentMessage = '//comments';
    this.setEditable(false);
     }
   };
@@ -77,7 +80,8 @@ function createAinsBlocks(){
     init: function() {
       this.appendDummyInput()
           .appendField("ForEach")
-          .appendField(new Blockly.FieldTextInput("default"), "NAME");
+          .appendField(new Blockly.FieldTextInput("default"), "NAME")
+          .appendField('//comments','comments');
       this.appendStatementInput("NAME")
           .setCheck(null)
           .appendField("do:");
@@ -86,18 +90,21 @@ function createAinsBlocks(){
       this.setColour(230);
    this.setTooltip("");
    this.setHelpUrl("");
+   this.commentMessage = '//comments';
     }
   };
   Blockly.Blocks['error'] = {
     init: function() {
       this.appendDummyInput()
           .appendField("Error:")
-          .appendField(new Blockly.FieldTextInput("default"), "NAME");
+          .appendField(new Blockly.FieldTextInput("default"), "NAME")
+          .appendField('//comments','comments');
       this.setPreviousStatement(true, null);
       this.setNextStatement(true, null);
-      this.setColour("#ff0033");
+      this.setColour("#ff4d6a");
    this.setTooltip("");
    this.setHelpUrl("");
+   this.commentMessage = '//comments';
     }
   };
 };

@@ -25,6 +25,7 @@
      </style> -->
     <link rel="stylesheet" type="text/css" href="./style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="select2-bootstrap.css">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.4/js/select2.min.js"></script>
      
 
@@ -187,30 +188,95 @@
 				</div>
 				<!-- <div class="container" id="invokeBox" style="display: none;"> -->
 				<div class="container" id="invokeBox" style="height: 400px;display: none;">
+					
+		<!-- 	
+					<form class="form-inline">
+						<label class="mr-sm-2" for="invokeOptions">
+							Select Function:
+						</label>
+						<select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="invokeOptions"></select>
+					</form>
+ -->
+					<div class="row">
+						<div class="col-sm-7"></div>
+						<div class="col-sm-5">
+							<h5>
+								Invoke Functions
+							</h5>
+						</div>
+						<!-- <hr> -->
+						
+					</div>
+					<hr>
+
+					<div class="container">
+						<div class="form-group row">
+							<label for="invokeOptions" class="col-sm-4 col-form-label">Select Function:</label>
+							<div class="col-sm-8">
+								<select class="custom-select mb-2 mr-sm-2 mb-sm-0" id="invokeOptions"></select>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="currentOption" class="col-sm-4 col-form-label">Current Option:</label>
+							<div class="col-sm-8">
+								<p id="currentOption"></p>
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-10">
+								<button class="btn btn-primary" id="changeOptionBtn">OK</button>
+							</div>
+						</div>
+					</div>
+					<hr>
+					<div class="container">
+						<div class="form-group row">
+							<label for="blockComments" class="col-sm-4 col-form-label">Comment:</label>
+							<div class="col-sm-8">
+								<input type="text" id="blockComments" placeholder="comments for current block">
+							</div>
+						</div>
+						<div class="form-group row">
+							<div class="col-sm-10">
+								<button class="btn btn-primary" id="changeOptionBtn">save comment</button>
+							</div>
+						</div>
+					</div>
+						
+					
+						
+					
+					
 					<table>
-						<tr>
+				<!-- 		<tr>
 							<td>
-								<p>Select function:</p>
+								<p>Select Function:</p>
 							</td>
-							<td id="invokeOptions">
-								<select name="options" id="options">
-									
-								</select> 
+							<td>
+								<select id="invokeOptions"></select>
 							</td>
-						</tr>
-						<tr>
+						</tr> -->
+					<!-- 	<tr>
 							<td>
 								<p>Current option:</p>
 							</td>
-							<td id="currentOption">
-								
+							<td>
+								<p id="currentOption"></p>
 							</td>
-						</tr>
-						<tr>
+						</tr> -->
+					<!-- 	<tr>
+							<td>
+								<p>Comments:</p>
+							</td>
+							<td>
+								<input type="text" id="blockComments" placeholder="comments for current block">
+							</td>
+						</tr> -->
+				<!-- 		<tr>
 							<td>
 								<input type="button" name="button" id="changeOptionBtn" value="OK">
 							</td>
-						</tr>
+						</tr> -->
 					</table>
 				</div>
 				<div class="container" id="getFolderBox" style="height:400px; display:none;">
@@ -439,11 +505,13 @@
 		<block type="ains_if"></block>
 		<sep gap="40"></sep>
 
-		<block type="ains_while"></block>
+		<block type="error"></block>
 		<sep gap="40"></sep>
+
 		<block type="foreach"></block>
 		<sep gap="40"></sep>
-		<block type="error"></block>
+		
+		<block type="ains_while"></block>
 		<!-- <block type="math_change"></block> -->
 		<!-- <block type="logic_compare" color="green"></block> -->
 	</xml>
